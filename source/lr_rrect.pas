@@ -7,14 +7,14 @@
 {     For question mail to : golivier@free.fr         }
 {*****************************************************}
 {Histo :                                              }
-{ 29/04/99 : CrÈation                                 }
+{ 29/04/99 : Cr√©ation                                 }
 { 30/04/99 : Corrections minueurs                     }
 {            Changer le TButton en TImage             }
 {            pour le choix de la couleur              }
 {            de l'ombre.                              }
-{            InitialisÈ avec mots entiers             }
+{            Initialis√© avec mots entiers             }
 {            par defaut                               }
-{ 22/06/99 : AjoutÈ la possibilitÈ de dÈgradÈ         }
+{ 22/06/99 : Ajout√© la possibilit√© de d√©grad√©         }
 {            mais dans ce cas, c'est un rectangle     }
 { 10/11/99 : Update for the FR 2.31 version           }
 {                                                     }
@@ -50,7 +50,7 @@ type
   TCorner = (ctTopLeft,ctBottomLeft,ctBottomRight,ctTopRight);
   TCornerSet = set of TCorner;
 
-  // Pour enregistrer les paramËtres
+  // Pour enregistrer les paramƒçtres
   TfrRoundRect = packed record
     SGradian  : Boolean;   //ShowGradian
     GradStyle : TGradientStyle;
@@ -102,7 +102,7 @@ type
     property SquaredCorners: TCornerSet read GetCorners write SetCorners;
   end;
 
-  // Editeur de propriÈtÈs
+  // Editeur de propri√©t√©s
 
   { TfrRoundRectForm }
 
@@ -153,7 +153,7 @@ type
     procedure cbGradianClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
-    { DÈclarations privÈes }
+    { D√©clarations priv√©es }
     fShadowColor: TColor;
     fNormalColor: TColor;
     
@@ -162,14 +162,14 @@ type
     procedure UpdateSample;
     function  GetCorners: TCornerSet;
   public
-    { DÈclarations publiques }
+    { D√©clarations publiques }
     procedure ShowEditor(t: TfrView); override;
     property Corners: TCornerSet read GetCorners write SetCorners;
   end;
 
 implementation
 
-uses LR_Const, LR_Var, LR_Flds;
+uses LR_Const, LR_Var, LR_Flds, uPSCompiler, uPSRuntime;
 
 {$R *.lfm}
 
@@ -868,7 +868,7 @@ begin
   end
   else
   begin
-    // RÈinitialise le panel
+    // R√©initialise le panel
     CC.Pen.Color := clBtnFace;
     CC.Brush.Color := clBtnFace;
     CC.Rectangle(0, 0, imgSample.Width, imgSample.Height);
@@ -1051,6 +1051,127 @@ begin
   ChgColorButton(bColor3, fShadowColor);
 end;
 
+(* === compile-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TfrRoundRectView(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TfrMemoView', 'TfrRoundRectView') do
+  with CL.AddClassN(CL.FindClass('TfrMemoView'),'TfrRoundRectView') do
+  begin
+    RegisterProperty('ShowGradian', 'Boolean', iptrw);
+    RegisterProperty('GradianStyle', 'TGradientStyle', iptrw);
+    RegisterProperty('ShadowColor', 'TColor', iptrw);
+    RegisterProperty('ShadowWidth', 'Integer', iptrw);
+    RegisterProperty('RoundRect', 'boolean', iptrw);
+    RegisterProperty('RoundRectCurve', 'Integer', iptrw);
+    RegisterProperty('SquaredCorners', 'TCornerSet', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_LR_RRect(CL: TPSPascalCompiler);
+begin
+  CL.AddTypeS('TGradientStyle', '( gsHorizontal, gsVertical, gsElliptic, gsRect'
+   +'angle, gsVertCenter, gsHorizCenter )');
+  CL.AddTypeS('TCorner', '( ctTopLeft, ctBottomLeft, ctBottomRight, ctTopRight '
+   +')');
+  CL.AddTypeS('TCornerSet', 'set of TCorner');
+  CL.AddTypeS('TfrRoundRect', 'record SGradian : Boolean; GradStyle : TGradient'
+   +'Style; SdColor : TColor; wShadow : Integer; sCurve : Boolean; wCurve : Int'
+   +'eger; Corners : TCornerSet; end');
+  SIRegister_TfrRoundRectView(CL);
+end;
+
+(* === run-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewSquaredCorners_W(Self: TfrRoundRectView; const T: TCornerSet);
+begin Self.SquaredCorners := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewSquaredCorners_R(Self: TfrRoundRectView; var T: TCornerSet);
+begin T := Self.SquaredCorners; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewRoundRectCurve_W(Self: TfrRoundRectView; const T: Integer);
+begin Self.RoundRectCurve := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewRoundRectCurve_R(Self: TfrRoundRectView; var T: Integer);
+begin T := Self.RoundRectCurve; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewRoundRect_W(Self: TfrRoundRectView; const T: boolean);
+begin Self.RoundRect := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewRoundRect_R(Self: TfrRoundRectView; var T: boolean);
+begin T := Self.RoundRect; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewShadowWidth_W(Self: TfrRoundRectView; const T: Integer);
+begin Self.ShadowWidth := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewShadowWidth_R(Self: TfrRoundRectView; var T: Integer);
+begin T := Self.ShadowWidth; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewShadowColor_W(Self: TfrRoundRectView; const T: TColor);
+begin Self.ShadowColor := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewShadowColor_R(Self: TfrRoundRectView; var T: TColor);
+begin T := Self.ShadowColor; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewGradianStyle_W(Self: TfrRoundRectView; const T: TGradientStyle);
+begin Self.GradianStyle := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewGradianStyle_R(Self: TfrRoundRectView; var T: TGradientStyle);
+begin T := Self.GradianStyle; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewShowGradian_W(Self: TfrRoundRectView; const T: Boolean);
+begin Self.ShowGradian := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrRoundRectViewShowGradian_R(Self: TfrRoundRectView; var T: Boolean);
+begin T := Self.ShowGradian; end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TfrRoundRectView(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TfrRoundRectView) do
+  begin
+    RegisterPropertyHelper(@TfrRoundRectViewShowGradian_R,@TfrRoundRectViewShowGradian_W,'ShowGradian');
+    RegisterPropertyHelper(@TfrRoundRectViewGradianStyle_R,@TfrRoundRectViewGradianStyle_W,'GradianStyle');
+    RegisterPropertyHelper(@TfrRoundRectViewShadowColor_R,@TfrRoundRectViewShadowColor_W,'ShadowColor');
+    RegisterPropertyHelper(@TfrRoundRectViewShadowWidth_R,@TfrRoundRectViewShadowWidth_W,'ShadowWidth');
+    RegisterPropertyHelper(@TfrRoundRectViewRoundRect_R,@TfrRoundRectViewRoundRect_W,'RoundRect');
+    RegisterPropertyHelper(@TfrRoundRectViewRoundRectCurve_R,@TfrRoundRectViewRoundRectCurve_W,'RoundRectCurve');
+    RegisterPropertyHelper(@TfrRoundRectViewSquaredCorners_R,@TfrRoundRectViewSquaredCorners_W,'SquaredCorners');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_LR_RRect(CL: TPSRuntimeClassImporter);
+begin
+  RIRegister_TfrRoundRectView(CL);
+end;
+
+(*----------------------------------------------------------------------------*)
+
+procedure PSCompImportRRect(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_LR_RRect(APSComp);
+end;
+
+procedure PSExecImportRRect(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_LR_RRect(APSImporter);
+end;
+
 
 { TfrRoundRectObject }
 
@@ -1062,7 +1183,8 @@ begin
   begin
     frRoundRectForm := TfrRoundRectForm.Create(nil);
     frRegisterObject(TfrRoundRectView, frRoundRectForm.Image1.Picture.Bitmap,
-      sInsRoundRect, frRoundRectForm);
+      sInsRoundRect, frRoundRectForm, otlReportView, nil, nil, @PSCompImportRRect,
+      @PSExecImportRRect);
   end;
 end;
 

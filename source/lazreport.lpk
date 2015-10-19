@@ -3,6 +3,7 @@
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="lazreport"/>
+    <Type Value="RunAndDesignTime"/>
     <Author Value="Olivier Guilbaud, Jesus Reyes A. "/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -24,7 +25,7 @@ Lazarus Port: Olivier Guilbaud, Jesus Reyes A.
 See license.txt and license-lazreport.txt for details.
 "/>
     <Version Minor="9" Release="9"/>
-    <Files Count="70">
+    <Files Count="72">
       <Item1>
         <Filename Value="lr_about.pas"/>
         <UnitName Value="LR_About"/>
@@ -292,7 +293,7 @@ See license.txt and license-lazreport.txt for details.
       </Item66>
       <Item67>
         <Filename Value="lr_previewtoolsabstract.pas"/>
-        <UnitName Value="lr_previewtoolsabstract"/>
+        <UnitName Value="lr_PreviewToolsAbstract"/>
       </Item67>
       <Item68>
         <Filename Value="lr_crossarray.pas"/>
@@ -304,31 +305,41 @@ See license.txt and license-lazreport.txt for details.
       </Item69>
       <Item70>
         <Filename Value="lr_crosstabeditor.pas"/>
-        <UnitName Value="lr_crosstabeditor"/>
+        <UnitName Value="lr_CrossTabEditor"/>
       </Item70>
+      <Item71>
+        <Filename Value="lr_psic.pas"/>
+        <UnitName Value="lr_psic"/>
+      </Item71>
+      <Item72>
+        <Filename Value="lr_psir.pas"/>
+        <UnitName Value="lr_psir"/>
+      </Item72>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
       <OutDir Value="languages"/>
     </i18n>
-    <Type Value="RunAndDesignTime"/>
-    <RequiredPkgs Count="5">
+    <RequiredPkgs Count="6">
       <Item1>
-        <PackageName Value="SynEdit"/>
+        <PackageName Value="pascalscript"/>
       </Item1>
       <Item2>
-        <PackageName Value="printer4lazarus"/>
+        <PackageName Value="SynEdit"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
+        <PackageName Value="printer4lazarus"/>
       </Item3>
       <Item4>
-        <PackageName Value="IDEIntf"/>
+        <PackageName Value="LCL"/>
       </Item4>
       <Item5>
+        <PackageName Value="IDEIntf"/>
+      </Item5>
+      <Item6>
         <PackageName Value="FCL"/>
         <MinVersion Major="1" Valid="True"/>
-      </Item5>
+      </Item6>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

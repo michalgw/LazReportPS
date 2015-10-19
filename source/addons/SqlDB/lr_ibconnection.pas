@@ -24,6 +24,9 @@ procedure Register;
 
 implementation
 
+uses
+  uPSCompiler;
+
 procedure Register;
 begin
   RegisterComponents('LazReport',[TLR_IBConnection]);
@@ -32,13 +35,19 @@ end;
 var
   lrBMP_IBConnection:TBitmap = nil;
 
+procedure PSCompImportLRIBCon(APSComp: TPSPascalCompiler);
+begin
+  APSComp.AddClassN(APSComp.FindClass('TLRSQLConnection'),'TLRIBConnection');
+end;
+
 procedure InitLRComp;
 begin
   if not assigned(lrBMP_IBConnection) then
   begin
     lrBMP_IBConnection := TbitMap.Create;
     lrBMP_IBConnection.LoadFromResourceName(HInstance, 'TLRIBConnection');
-    frRegisterObject(TLRIBConnection, lrBMP_IBConnection, 'TLRIBConnection', nil, otlUIControl, nil);
+    frRegisterObject(TLRIBConnection, lrBMP_IBConnection, 'TLRIBConnection', nil, otlUIControl, nil,
+      nil, @PSCompImportLRIBCon, nil);
   end;
 end;
 

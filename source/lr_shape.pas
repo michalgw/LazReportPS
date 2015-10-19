@@ -84,7 +84,7 @@ implementation
 
 {$R *.lfm}
 
-uses LR_Const;
+uses LR_Const, uPSCompiler, uPSRuntime;
 
 procedure DumpRgn(Msg:string;Rgn: HRGN);
 var
@@ -467,6 +467,62 @@ begin
   GroupBox1.Caption := sShapeFormKind;
 end;
 
+(* === compile-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TfrShapeView(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TfrView', 'TfrShapeView') do
+  with CL.AddClassN(CL.FindClass('TfrView'),'TfrShapeView') do
+  begin
+    RegisterProperty('ShapeType', 'TfrShapeType', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_LR_Shape(CL: TPSPascalCompiler);
+begin
+  CL.AddTypeS('TfrShapeType', '( frstRectangle, frstRoundRect, frstEllipse, frs'
+   +'tTriangle, frstDiagonal1, frstDiagonal2 )');
+  SIRegister_TfrShapeView(CL);
+end;
+
+(* === run-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure TfrShapeViewShapeType_W(Self: TfrShapeView; const T: TfrShapeType);
+begin Self.ShapeType := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrShapeViewShapeType_R(Self: TfrShapeView; var T: TfrShapeType);
+begin T := Self.ShapeType; end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TfrShapeView(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TfrShapeView) do
+  begin
+    RegisterPropertyHelper(@TfrShapeViewShapeType_R,@TfrShapeViewShapeType_W,'ShapeType');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_LR_Shape(CL: TPSRuntimeClassImporter);
+begin
+  RIRegister_TfrShapeView(CL);
+end;
+
+(*----------------------------------------------------------------------------*)
+
+procedure PSCompImportShape(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_LR_Shape(APSComp);
+end;
+
+procedure PSExecImportShape(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_LR_Shape(APSImporter);
+end;
+
+
 { TfrShapeObject }
 constructor TfrShapeObject.Create(aOwner: TComponent);
 begin
@@ -476,7 +532,8 @@ begin
   begin
     frShapeForm:=TfrShapeForm.Create(nil);
     frRegisterObject(TfrShapeView, frShapeForm.Image1.Picture.Bitmap,
-      sInsShape, frShapeForm);
+      sInsShape, frShapeForm, otlReportView, nil, nil, @PSCompImportShape,
+      @PSExecImportShape);
   end;
 end;
 

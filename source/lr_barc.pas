@@ -161,7 +161,8 @@ implementation
 
 {$R *.lfm}
 
-uses LR_Var, LR_Flds, LR_Const, LR_Utils, InterfaceBase;
+uses LR_Var, LR_Flds, LR_Const, LR_Utils, InterfaceBase,
+  uPSCompiler, uPSRuntime;
 
 
 var
@@ -794,6 +795,135 @@ begin
   end;
 end;
 
+(* === compile-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TfrBarcodeView(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TfrCustomBarcodeView', 'TfrBarcodeView') do
+  with CL.AddClassN(CL.FindClass('TfrCustomBarcodeView'),'TfrBarcodeView') do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TfrCustomBarCodeView(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TfrView', 'TfrCustomBarCodeView') do
+  with CL.AddClassN(CL.FindClass('TfrView'),'TfrCustomBarCodeView') do
+  begin
+    RegisterProperty('Param', 'TfrBarCode', iptrw);
+    RegisterMethod('Function GenerateBitmap : TBitmap');
+    RegisterProperty('CheckSum', 'Boolean', iptrw);
+    RegisterProperty('BarType', 'TBarcodeType', iptrw);
+    RegisterProperty('ShowText', 'Boolean', iptrw);
+    RegisterProperty('Zoom', 'Double', iptrw);
+    RegisterProperty('Angle', 'Double', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_LR_BarC(CL: TPSPascalCompiler);
+begin
+  CL.AddTypeS('TBarcodeType', '( bcCode_2_5_interleaved, bcCode_2_5_industrial,'
+   +' bcCode_2_5_matrix, bcCode39, bcCode39Extended, bcCode128A, bcCode128B, bc'
+   +'Code128C, bcCode93, bcCode93Extended, bcCodeMSI, bcCodePostNet, bcCodeCoda'
+   +'bar, bcCodeEAN8, bcCodeEAN13 )');
+  CL.AddTypeS('TfrBarCode', 'record cCheckSum : Boolean; cShowText : Boolean; c'
+   +'Cadr : Boolean; cBarType : TBarcodeType; cModul : Integer; cRatio : Double'
+   +'; cAngle : Double; end');
+  SIRegister_TfrCustomBarCodeView(CL);
+  SIRegister_TfrBarcodeView(CL);
+end;
+
+(* === run-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewAngle_W(Self: TfrCustomBarCodeView; const T: Double);
+begin Self.Angle := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewAngle_R(Self: TfrCustomBarCodeView; var T: Double);
+begin T := Self.Angle; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewZoom_W(Self: TfrCustomBarCodeView; const T: Double);
+begin Self.Zoom := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewZoom_R(Self: TfrCustomBarCodeView; var T: Double);
+begin T := Self.Zoom; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewShowText_W(Self: TfrCustomBarCodeView; const T: Boolean);
+begin Self.ShowText := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewShowText_R(Self: TfrCustomBarCodeView; var T: Boolean);
+begin T := Self.ShowText; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewBarType_W(Self: TfrCustomBarCodeView; const T: TBarcodeType);
+begin Self.BarType := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewBarType_R(Self: TfrCustomBarCodeView; var T: TBarcodeType);
+begin T := Self.BarType; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewCheckSum_W(Self: TfrCustomBarCodeView; const T: Boolean);
+begin Self.CheckSum := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewCheckSum_R(Self: TfrCustomBarCodeView; var T: Boolean);
+begin T := Self.CheckSum; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewParam_W(Self: TfrCustomBarCodeView; const T: TfrBarCode);
+Begin Self.Param := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCustomBarCodeViewParam_R(Self: TfrCustomBarCodeView; var T: TfrBarCode);
+Begin T := Self.Param; end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TfrBarcodeView(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TfrBarcodeView) do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TfrCustomBarCodeView(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TfrCustomBarCodeView) do
+  begin
+    RegisterPropertyHelper(@TfrCustomBarCodeViewParam_R,@TfrCustomBarCodeViewParam_W,'Param');
+    RegisterVirtualMethod(@TfrCustomBarCodeView.GenerateBitmap, 'GenerateBitmap');
+    RegisterPropertyHelper(@TfrCustomBarCodeViewCheckSum_R,@TfrCustomBarCodeViewCheckSum_W,'CheckSum');
+    RegisterPropertyHelper(@TfrCustomBarCodeViewBarType_R,@TfrCustomBarCodeViewBarType_W,'BarType');
+    RegisterPropertyHelper(@TfrCustomBarCodeViewShowText_R,@TfrCustomBarCodeViewShowText_W,'ShowText');
+    RegisterPropertyHelper(@TfrCustomBarCodeViewZoom_R,@TfrCustomBarCodeViewZoom_W,'Zoom');
+    RegisterPropertyHelper(@TfrCustomBarCodeViewAngle_R,@TfrCustomBarCodeViewAngle_W,'Angle');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_LR_BarC(CL: TPSRuntimeClassImporter);
+begin
+  RIRegister_TfrCustomBarCodeView(CL);
+  RIRegister_TfrBarcodeView(CL);
+end;
+
+procedure PSCompImportBarC(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_LR_BarC(APSComp);
+end;
+
+procedure PSExecImportBarC(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_LR_BarC(APSImporter);
+end;
+
 procedure InitializeBarcAddin;
 begin
   if not assigned(frBarCodeForm) {and not (csDesigning in ComponentState)} then
@@ -815,7 +945,8 @@ end;
 
 initialization
   frBarcodeForm := nil;
-  frRegisterObject(TfrBarCodeView, nil, '', nil, @InitializeBarcAddin);
+  frRegisterObject(TfrBarCodeView, nil, '', nil, otlReportView, @InitializeBarcAddin, nil,
+    @PSCompImportBarC, @PSExecImportBarC);
 
 finalization
   if Assigned(frBarCodeForm) then

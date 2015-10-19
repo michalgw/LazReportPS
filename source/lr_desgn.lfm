@@ -9,7 +9,7 @@ object frDesignerForm: TfrDesignerForm
   VertScrollBar.Range = 149
   ActiveControl = frDock1
   Caption = 'Designer'
-  ClientHeight = 405
+  ClientHeight = 414
   ClientWidth = 695
   KeyPreview = True
   Menu = MainMenu1
@@ -27,8 +27,8 @@ object frDesignerForm: TfrDesignerForm
   WindowState = wsMaximized
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 25
-    Top = 380
+    Height = 23
+    Top = 391
     Width = 695
     Panels = <    
       item
@@ -1651,10 +1651,10 @@ object frDesignerForm: TfrDesignerForm
         object C3: TComboBox
           Tag = 8
           Left = 161
-          Height = 33
+          Height = 23
           Top = 2
           Width = 67
-          ItemHeight = 0
+          ItemHeight = 15
           Items.Strings = (
             '5'
             '6'
@@ -1683,7 +1683,7 @@ object frDesignerForm: TfrDesignerForm
         object C2: TComboBox
           Tag = 7
           Left = 1
-          Height = 35
+          Height = 19
           Top = 2
           Width = 155
           ItemHeight = 13
@@ -2080,7 +2080,7 @@ object frDesignerForm: TfrDesignerForm
         object E1: TEdit
           Tag = 6
           Left = 4
-          Height = 31
+          Height = 23
           Top = 1
           Width = 31
           TabOrder = 0
@@ -2145,21 +2145,21 @@ object frDesignerForm: TfrDesignerForm
   end
   object frDock2: TPanel
     Left = 0
-    Height = 300
+    Height = 311
     Top = 80
     Width = 27
     Align = alLeft
-    ClientHeight = 300
+    ClientHeight = 311
     ClientWidth = 27
     FullRepaint = False
     TabOrder = 1
     object panForDlg: TPanel
       Left = 1
-      Height = 298
+      Height = 309
       Top = 1
       Width = 25
       Align = alClient
-      ClientHeight = 298
+      ClientHeight = 309
       ClientWidth = 25
       FullRepaint = False
       TabOrder = 1
@@ -2222,14 +2222,61 @@ object frDesignerForm: TfrDesignerForm
         FullRepaint = False
         TabOrder = 0
       end
+      object OB8: TSpeedButton
+        Tag = 5
+        Left = 1
+        Height = 22
+        Top = 25
+        Width = 23
+        Align = alTop
+        Flat = True
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000A5A2A5FF0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFFFFB
+          FFFFFFFBFFFFFFFBFFFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFA50000FFA50000FF8A0B61FF4015BAFF4015BAFF8A0B
+          61FFA50000FFA50000FFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFFFFBFFFFFFFBFFFFCAC7F0FF1817CFFF1817CFFFCAC7
+          F0FFFFFBFFFFFFFBFFFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFA50000FFA50000FF950848FF700F89FF700F89FF9508
+          48FFA50000FFFFFBFFFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFFFFBFFFFFFFBFFFFDAD7F4FF5E5CD8FF5E5CD8FFD5D1
+          F3FFFFFBFFFFFFFBFFFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFA50000FFA50000FF9B0636FF2317CBFF1817CFFF4314
+          B8FF9B0637FFA50000FFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFC7C3EFFF2D2CD1FF1817
+          CFFF4D4BD5FFEEEAFAFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFF980740FF730F86FF62119BFF8A0B61FF8A0B60FF1817
+          CFFF1817CFFF651197FFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFE4E0F7FF1B1ACFFF1817CFFF6765D9FFB4B1EAFF1817
+          CFFF1817CFFF9390E2FFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFA50000FF5C12A1FF1817CFFF1817CFFF1817CFFF1817
+          CFFF2516CAFFDEDBF5FFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFFFFBFFFFFDF9FEFFC4C1EEFF8F8CE1FF8A88E0FFA29F
+          E6FFEAE6F9FFFFFBFFFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFFFFBFFFFFFFB
+          FFFFFFFBFFFFFFFBFFFFFFFBFFFF000000000000000000000000000000000000
+          0000A5A2A5FFA5A2A5FFA5A2A5FFA5A2A5FFA5A2A5FFA5A2A5FFA5A2A5FFA5A2
+          A5FFA5A2A5FFA5A2A5FFA5A2A5FFA5A2A5FF0000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000
+        }
+        GroupIndex = 1
+        OnMouseDown = OB2MouseDown
+      end
     end
     object Panel4: TPanel
       Left = 1
-      Height = 298
+      Height = 309
       Top = 1
       Width = 25
       Align = alClient
-      ClientHeight = 298
+      ClientHeight = 309
       ClientWidth = 25
       FullRepaint = False
       TabOrder = 0
@@ -2525,16 +2572,107 @@ object frDesignerForm: TfrDesignerForm
         TabOrder = 0
       end
     end
+    object panForPS: TPanel
+      Left = 1
+      Height = 309
+      Top = 1
+      Width = 25
+      Align = alClient
+      ClientHeight = 309
+      ClientWidth = 25
+      FullRepaint = False
+      TabOrder = 2
+      Visible = False
+      object ToolBar1: TToolBar
+        Left = 1
+        Height = 307
+        Top = 1
+        Width = 24
+        Align = alLeft
+        AutoSize = True
+        Caption = 'ToolBar1'
+        EdgeBorders = []
+        Images = ActionsImageList
+        TabOrder = 0
+        object tbPSCompile: TToolButton
+          Left = 1
+          Top = 0
+          Action = ActPSCompile
+        end
+        object ToolButton1: TToolButton
+          Left = 1
+          Height = 5
+          Top = 22
+          Width = 23
+          Caption = 'ToolButton1'
+          Style = tbsDivider
+        end
+        object ToolButton2: TToolButton
+          Left = 1
+          Top = 27
+          Action = ActPSRun
+        end
+        object ToolButton3: TToolButton
+          Left = 1
+          Top = 93
+          Action = ActPSStepInto
+        end
+        object ToolButton4: TToolButton
+          Left = 1
+          Top = 115
+          Action = ActPSStepOver
+        end
+        object ToolButton5: TToolButton
+          Left = 1
+          Top = 49
+          Action = ActPSPause
+        end
+        object ToolButton6: TToolButton
+          Left = 1
+          Top = 71
+          Action = ActPSStop
+        end
+        object ToolButton7: TToolButton
+          Left = 1
+          Height = 5
+          Top = 137
+          Width = 23
+          Caption = 'ToolButton7'
+          Style = tbsDivider
+        end
+        object ToolButton8: TToolButton
+          Left = 1
+          Top = 142
+          Action = ActPSBrkpt
+        end
+        object ToolButton9: TToolButton
+          Left = 1
+          Height = 5
+          Top = 164
+          Width = 23
+          Caption = 'ToolButton9'
+          Style = tbsDivider
+        end
+        object ToolButton10: TToolButton
+          Left = 1
+          Top = 169
+          HelpType = htKeyword
+          HelpKeyword = 'Evaluate variable'
+          Action = ActPSEval
+        end
+      end
+    end
   end
   object Tab1: TTabControl
     Left = 27
-    Height = 300
+    Height = 311
     Top = 80
     Width = 641
     TabStop = False
     OnChange = Tab1Change
     TabIndex = 0
     Tabs.Strings = (
+      'PascalScript'
       'Page 1'
     )
     Align = alClient
@@ -2542,25 +2680,25 @@ object frDesignerForm: TfrDesignerForm
     TabOrder = 2
     object panTab: TPanel
       Left = 2
-      Height = 262
-      Top = 36
+      Height = 286
+      Top = 23
       Width = 637
       Align = alClient
       BevelOuter = bvNone
       Caption = 'panTab'
-      ClientHeight = 262
+      ClientHeight = 286
       ClientWidth = 637
       TabOrder = 1
       object ScrollBox1: TScrollBox
         Left = 0
-        Height = 262
+        Height = 286
         Top = 0
         Width = 637
         HorzScrollBar.Page = 488
         VertScrollBar.Page = 174
         Align = alClient
-        ClientHeight = 260
-        ClientWidth = 635
+        ClientHeight = 282
+        ClientWidth = 633
         Color = clGray
         ParentColor = False
         TabOrder = 0
@@ -3819,15 +3957,581 @@ object frDesignerForm: TfrDesignerForm
         end
       end
     end
+    object panTabPS: TPanel
+      Left = 2
+      Height = 286
+      Top = 23
+      Width = 637
+      Align = alClient
+      Caption = 'panTabPS'
+      ClientHeight = 286
+      ClientWidth = 637
+      TabOrder = 2
+      Visible = False
+      inline SynEditPS: TSynEdit
+        Left = 1
+        Height = 170
+        Top = 1
+        Width = 635
+        Align = alClient
+        Font.Height = -13
+        Font.Name = 'Courier New'
+        Font.Pitch = fpFixed
+        Font.Quality = fqNonAntialiased
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 0
+        BookMarkOptions.BookmarkImages = ImageListSynPS
+        Gutter.Width = 57
+        Gutter.MouseActions = <>
+        RightGutter.Width = 0
+        RightGutter.MouseActions = <>
+        Highlighter = SynPasSyn1
+        Keystrokes = <        
+          item
+            Command = ecUp
+            ShortCut = 38
+          end        
+          item
+            Command = ecSelUp
+            ShortCut = 8230
+          end        
+          item
+            Command = ecScrollUp
+            ShortCut = 16422
+          end        
+          item
+            Command = ecDown
+            ShortCut = 40
+          end        
+          item
+            Command = ecSelDown
+            ShortCut = 8232
+          end        
+          item
+            Command = ecScrollDown
+            ShortCut = 16424
+          end        
+          item
+            Command = ecLeft
+            ShortCut = 37
+          end        
+          item
+            Command = ecSelLeft
+            ShortCut = 8229
+          end        
+          item
+            Command = ecWordLeft
+            ShortCut = 16421
+          end        
+          item
+            Command = ecSelWordLeft
+            ShortCut = 24613
+          end        
+          item
+            Command = ecRight
+            ShortCut = 39
+          end        
+          item
+            Command = ecSelRight
+            ShortCut = 8231
+          end        
+          item
+            Command = ecWordRight
+            ShortCut = 16423
+          end        
+          item
+            Command = ecSelWordRight
+            ShortCut = 24615
+          end        
+          item
+            Command = ecPageDown
+            ShortCut = 34
+          end        
+          item
+            Command = ecSelPageDown
+            ShortCut = 8226
+          end        
+          item
+            Command = ecPageBottom
+            ShortCut = 16418
+          end        
+          item
+            Command = ecSelPageBottom
+            ShortCut = 24610
+          end        
+          item
+            Command = ecPageUp
+            ShortCut = 33
+          end        
+          item
+            Command = ecSelPageUp
+            ShortCut = 8225
+          end        
+          item
+            Command = ecPageTop
+            ShortCut = 16417
+          end        
+          item
+            Command = ecSelPageTop
+            ShortCut = 24609
+          end        
+          item
+            Command = ecLineStart
+            ShortCut = 36
+          end        
+          item
+            Command = ecSelLineStart
+            ShortCut = 8228
+          end        
+          item
+            Command = ecEditorTop
+            ShortCut = 16420
+          end        
+          item
+            Command = ecSelEditorTop
+            ShortCut = 24612
+          end        
+          item
+            Command = ecLineEnd
+            ShortCut = 35
+          end        
+          item
+            Command = ecSelLineEnd
+            ShortCut = 8227
+          end        
+          item
+            Command = ecEditorBottom
+            ShortCut = 16419
+          end        
+          item
+            Command = ecSelEditorBottom
+            ShortCut = 24611
+          end        
+          item
+            Command = ecToggleMode
+            ShortCut = 45
+          end        
+          item
+            Command = ecCopy
+            ShortCut = 16429
+          end        
+          item
+            Command = ecPaste
+            ShortCut = 8237
+          end        
+          item
+            Command = ecDeleteChar
+            ShortCut = 46
+          end        
+          item
+            Command = ecCut
+            ShortCut = 8238
+          end        
+          item
+            Command = ecDeleteLastChar
+            ShortCut = 8
+          end        
+          item
+            Command = ecDeleteLastChar
+            ShortCut = 8200
+          end        
+          item
+            Command = ecDeleteLastWord
+            ShortCut = 16392
+          end        
+          item
+            Command = ecUndo
+            ShortCut = 32776
+          end        
+          item
+            Command = ecRedo
+            ShortCut = 40968
+          end        
+          item
+            Command = ecLineBreak
+            ShortCut = 13
+          end        
+          item
+            Command = ecSelectAll
+            ShortCut = 16449
+          end        
+          item
+            Command = ecCopy
+            ShortCut = 16451
+          end        
+          item
+            Command = ecBlockIndent
+            ShortCut = 24649
+          end        
+          item
+            Command = ecLineBreak
+            ShortCut = 16461
+          end        
+          item
+            Command = ecInsertLine
+            ShortCut = 16462
+          end        
+          item
+            Command = ecDeleteWord
+            ShortCut = 16468
+          end        
+          item
+            Command = ecBlockUnindent
+            ShortCut = 24661
+          end        
+          item
+            Command = ecPaste
+            ShortCut = 16470
+          end        
+          item
+            Command = ecCut
+            ShortCut = 16472
+          end        
+          item
+            Command = ecDeleteLine
+            ShortCut = 16473
+          end        
+          item
+            Command = ecDeleteEOL
+            ShortCut = 24665
+          end        
+          item
+            Command = ecUndo
+            ShortCut = 16474
+          end        
+          item
+            Command = ecRedo
+            ShortCut = 24666
+          end        
+          item
+            Command = ecGotoMarker0
+            ShortCut = 16432
+          end        
+          item
+            Command = ecGotoMarker1
+            ShortCut = 16433
+          end        
+          item
+            Command = ecGotoMarker2
+            ShortCut = 16434
+          end        
+          item
+            Command = ecGotoMarker3
+            ShortCut = 16435
+          end        
+          item
+            Command = ecGotoMarker4
+            ShortCut = 16436
+          end        
+          item
+            Command = ecGotoMarker5
+            ShortCut = 16437
+          end        
+          item
+            Command = ecGotoMarker6
+            ShortCut = 16438
+          end        
+          item
+            Command = ecGotoMarker7
+            ShortCut = 16439
+          end        
+          item
+            Command = ecGotoMarker8
+            ShortCut = 16440
+          end        
+          item
+            Command = ecGotoMarker9
+            ShortCut = 16441
+          end        
+          item
+            Command = ecSetMarker0
+            ShortCut = 24624
+          end        
+          item
+            Command = ecSetMarker1
+            ShortCut = 24625
+          end        
+          item
+            Command = ecSetMarker2
+            ShortCut = 24626
+          end        
+          item
+            Command = ecSetMarker3
+            ShortCut = 24627
+          end        
+          item
+            Command = ecSetMarker4
+            ShortCut = 24628
+          end        
+          item
+            Command = ecSetMarker5
+            ShortCut = 24629
+          end        
+          item
+            Command = ecSetMarker6
+            ShortCut = 24630
+          end        
+          item
+            Command = ecSetMarker7
+            ShortCut = 24631
+          end        
+          item
+            Command = ecSetMarker8
+            ShortCut = 24632
+          end        
+          item
+            Command = ecSetMarker9
+            ShortCut = 24633
+          end        
+          item
+            Command = EcFoldLevel1
+            ShortCut = 41009
+          end        
+          item
+            Command = EcFoldLevel2
+            ShortCut = 41010
+          end        
+          item
+            Command = EcFoldLevel3
+            ShortCut = 41011
+          end        
+          item
+            Command = EcFoldLevel4
+            ShortCut = 41012
+          end        
+          item
+            Command = EcFoldLevel5
+            ShortCut = 41013
+          end        
+          item
+            Command = EcFoldLevel6
+            ShortCut = 41014
+          end        
+          item
+            Command = EcFoldLevel7
+            ShortCut = 41015
+          end        
+          item
+            Command = EcFoldLevel8
+            ShortCut = 41016
+          end        
+          item
+            Command = EcFoldLevel9
+            ShortCut = 41017
+          end        
+          item
+            Command = EcFoldLevel0
+            ShortCut = 41008
+          end        
+          item
+            Command = EcFoldCurrent
+            ShortCut = 41005
+          end        
+          item
+            Command = EcUnFoldCurrent
+            ShortCut = 41003
+          end        
+          item
+            Command = EcToggleMarkupWord
+            ShortCut = 32845
+          end        
+          item
+            Command = ecNormalSelect
+            ShortCut = 24654
+          end        
+          item
+            Command = ecColumnSelect
+            ShortCut = 24643
+          end        
+          item
+            Command = ecLineSelect
+            ShortCut = 24652
+          end        
+          item
+            Command = ecTab
+            ShortCut = 9
+          end        
+          item
+            Command = ecShiftTab
+            ShortCut = 8201
+          end        
+          item
+            Command = ecMatchBracket
+            ShortCut = 24642
+          end        
+          item
+            Command = ecColSelUp
+            ShortCut = 40998
+          end        
+          item
+            Command = ecColSelDown
+            ShortCut = 41000
+          end        
+          item
+            Command = ecColSelLeft
+            ShortCut = 40997
+          end        
+          item
+            Command = ecColSelRight
+            ShortCut = 40999
+          end        
+          item
+            Command = ecColSelPageDown
+            ShortCut = 40994
+          end        
+          item
+            Command = ecColSelPageBottom
+            ShortCut = 57378
+          end        
+          item
+            Command = ecColSelPageUp
+            ShortCut = 40993
+          end        
+          item
+            Command = ecColSelPageTop
+            ShortCut = 57377
+          end        
+          item
+            Command = ecColSelLineStart
+            ShortCut = 40996
+          end        
+          item
+            Command = ecColSelLineEnd
+            ShortCut = 40995
+          end        
+          item
+            Command = ecColSelEditorTop
+            ShortCut = 57380
+          end        
+          item
+            Command = ecColSelEditorBottom
+            ShortCut = 57379
+          end>
+        MouseActions = <>
+        MouseTextActions = <>
+        MouseSelActions = <>
+        Lines.Strings = (
+          'SynEditPS'
+        )
+        VisibleSpecialChars = [vscSpace, vscTabAtLast]
+        SelectedColor.BackPriority = 50
+        SelectedColor.ForePriority = 50
+        SelectedColor.FramePriority = 50
+        SelectedColor.BoldPriority = 50
+        SelectedColor.ItalicPriority = 50
+        SelectedColor.UnderlinePriority = 50
+        SelectedColor.StrikeOutPriority = 50
+        BracketHighlightStyle = sbhsBoth
+        BracketMatchColor.Background = clNone
+        BracketMatchColor.Foreground = clNone
+        BracketMatchColor.Style = [fsBold]
+        FoldedCodeColor.Background = clNone
+        FoldedCodeColor.Foreground = clGray
+        FoldedCodeColor.FrameColor = clGray
+        MouseLinkColor.Background = clNone
+        MouseLinkColor.Foreground = clBlue
+        LineHighlightColor.Background = clNone
+        LineHighlightColor.Foreground = clNone
+        OnChange = SynEditPSChange
+        OnGutterClick = SynEditPSGutterClick
+        inline SynLeftGutterPartList1: TSynGutterPartList
+          object SynGutterMarks1: TSynGutterMarks
+            Width = 24
+            MouseActions = <>
+          end
+          object SynGutterLineNumber1: TSynGutterLineNumber
+            Width = 17
+            MouseActions = <>
+            MarkupInfo.Background = clBtnFace
+            MarkupInfo.Foreground = clNone
+            DigitCount = 2
+            ShowOnlyLineNumbersMultiplesOf = 1
+            ZeroStart = False
+            LeadingZeros = False
+          end
+          object SynGutterChanges1: TSynGutterChanges
+            Width = 4
+            MouseActions = <>
+            ModifiedColor = 59900
+            SavedColor = clGreen
+          end
+          object SynGutterSeparator1: TSynGutterSeparator
+            Width = 2
+            MouseActions = <>
+            MarkupInfo.Background = clWhite
+            MarkupInfo.Foreground = clGray
+          end
+          object SynGutterCodeFolding1: TSynGutterCodeFolding
+            MouseActions = <>
+            MarkupInfo.Background = clNone
+            MarkupInfo.Foreground = clGray
+            MouseActionsExpanded = <>
+            MouseActionsCollapsed = <>
+          end
+        end
+      end
+      object PageControl1: TPageControl
+        Left = 1
+        Height = 109
+        Top = 176
+        Width = 635
+        ActivePage = TabSheetPSMsg
+        Align = alBottom
+        TabIndex = 0
+        TabOrder = 1
+        object TabSheetPSMsg: TTabSheet
+          Caption = 'Messages'
+          ClientHeight = 81
+          ClientWidth = 627
+          object ListBoxPSMsg: TListBox
+            Left = 0
+            Height = 81
+            Top = 0
+            Width = 627
+            Align = alClient
+            ItemHeight = 0
+            OnDblClick = ListBoxPSMsgDblClick
+            PopupMenu = PopupMenuMsg
+            TabOrder = 0
+          end
+        end
+        object TabSheetPSBkpt: TTabSheet
+          Caption = 'Breakpoints'
+          ClientHeight = 81
+          ClientWidth = 627
+          object ListBoxBrkpt: TListBox
+            Left = 0
+            Height = 81
+            Top = 0
+            Width = 627
+            Align = alClient
+            ItemHeight = 0
+            OnDblClick = ListBoxBrkptDblClick
+            PopupMenu = PopupMenuBrkpt
+            TabOrder = 0
+          end
+        end
+      end
+      object Splitter1: TSplitter
+        Cursor = crVSplit
+        Left = 1
+        Height = 5
+        Top = 171
+        Width = 635
+        Align = alBottom
+        ResizeAnchor = akBottom
+      end
+    end
   end
   object frDock4: TPanel
     Left = 668
-    Height = 300
+    Height = 311
     Top = 80
     Width = 27
     Align = alRight
     Anchors = [akTop, akRight]
-    ClientHeight = 300
+    ClientHeight = 311
     ClientWidth = 27
     FullRepaint = False
     TabOrder = 3
@@ -4622,9 +5326,81 @@ object frDesignerForm: TfrDesignerForm
       Caption = '&Edit'
       object N46: TMenuItem
         Action = edtUndo
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000018A6C3691AA7C46900A0C4180000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000A0C45D66DBEAB211A6C2AE0000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000A0C42243C4DBFC43C5D8FE23A6C07F00000000000000000000
+          00000000000000000000000000000000000000A0C4FF00000000000000000000
+          000000000000000000000EAACBFE5DDAE9FE23A6C0EF00000000000000000000
+          000000000000000000000000000000A0C4FF00A0C4FF00000000000000000000
+          000000000000009EC11A02ACC8FF88E7F2FE11A2C2FF00000000000000000000
+          00000000000005797D1100A0C4FF76EDFBFF00A0C4FF000000000000000000A0
+          C4300099B95000A0C4C96DE6F5FF76E2EFFF19A3C1FF00000000000000000000
+          000005797D1100A0C4FF76EDFBFF76EDFBFF00A0C4FF00A0C4FF00A0C4FF00A0
+          C4FF01A9C4FF6EE1EEFF0FC9DFFF69E4F2FF1AA4C0F800000000000000000579
+          7D1100A0C4FF76EDFBFF04C3DAFF76EDFBFF69EAF9FF69EAF9FF69EAF9FF69EA
+          F9FF05DDF7FF0AC8DFFF07C2D8FF6FDCEBFF1BA3BFF40000000005797E1100A0
+          C4FF79EDFBFF32E2F8FF2CDFF4FF04C0D6FF04C0D6FF04C0D6FF1DD2E8FF1DD2
+          E8FF1DD2E8FF0BC8DFFF6AE5F3FF1BABC5F815A0BCCB0000000000A0C4FFADF3
+          FBFF2FE0F6FF32E2F8FF32E2F7FF32E2F7FF2FE0F5FF29DBF1FF1DD2E8FF1DD2
+          E8FF1DD2E8FF36D9ECFF40CDE1FF16A1BDCA05797D0A0000000005797D0A00A0
+          C4FFADF3FBFF2FE0F6FF32E2F7FF29DBF1FF2FE0F5FF29DBF1FF16CDE3FF36D9
+          ECFF69E7F6FF41CEE3FE13A3C1E405797D320000000000000000000000000579
+          7D1100A0C4FFADF3FBFF31E1F6FF20E3FAFF73ECFAFF6FEBFAFF6EE8F7FF6CE8
+          F7F814A1BCD414A3C1D505797D1C000000000000000000000000000000000000
+          000005797D1100A0C4FFADF3FBFF25E4FBFF00A0C4FF00A0C4FF13A1BEE7159F
+          BBCF1BA1BBA4067A7C0B00000000000000000000000000000000000000000000
+          00000000000005797D1100A0C4FFADF3FBFF00A0C4FF00000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000009DBF1400A0C4FF00A0C4FF00000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000A0C4FF00000000000000000000
+          0000000000000000000000000000000000000000000000000000
+        }
       end
       object N48: TMenuItem
         Action = edtRedo
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000FFFFFF000000
+          000000A0C4181AA7C46918A6C369000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000FFFFFF000000
+          000011A6C2AE66DBEAB200A0C45D000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000FFFFFF0023A6
+          C07F43C5D8FE43C4DBFC00A0C422000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000FFFFFF0023A6
+          C0EF5DDAE9FE0EAACBFE000000000000000000000000000000000000000000A0
+          C4FF000000000000000000000000000000000000000000000000FFFFFF0011A2
+          C2FF88E7F2FE02ACC8FF009EC11A0000000000000000000000000000000000A0
+          C4FF00A0C4FF0000000000000000000000000000000000000000FFFFFF0019A3
+          C1FF76E2EFFF6DE6F5FF00A0C4C90099B95000A0C430000000000000000000A0
+          C4FF76EDFBFF00A0C4FF05797D11000000000000000000000000FFFFFF001AA4
+          C0F869E4F2FF0FC9DFFF6EE1EEFF01A9C4FF00A0C4FF00A0C4FF00A0C4FF00A0
+          C4FF76EDFBFF76EDFBFF00A0C4FF05797D110000000000000000FFFFFF001BA3
+          BFF46FDCEBFF07C2D8FF0AC8DFFF05DDF7FF69EAF9FF69EAF9FF69EAF9FF69EA
+          F9FF76EDFBFF04C3DAFF76EDFBFF00A0C4FF05797D1100000000FFFFFF0015A0
+          BCCB1BABC5F86AE5F3FF0BC8DFFF1DD2E8FF1DD2E8FF1DD2E8FF04C0D6FF04C0
+          D6FF04C0D6FF2CDFF4FF32E2F8FF79EDFBFF00A0C4FF05797E11FFFFFF000579
+          7D0A16A1BDCA40CDE1FF36D9ECFF1DD2E8FF1DD2E8FF1DD2E8FF29DBF1FF2FE0
+          F5FF32E2F7FF32E2F7FF32E2F8FF2FE0F6FFADF3FBFF00A0C4FFFFFFFF000000
+          000005797D3213A3C1E441CEE3FE69E7F6FF36D9ECFF16CDE3FF29DBF1FF2FE0
+          F5FF29DBF1FF32E2F7FF2FE0F6FFADF3FBFF00A0C4FF05797D0AFFFFFF000000
+          00000000000005797D1C14A3C1D514A1BCD46CE8F7F86EE8F7FF6FEBFAFF73EC
+          FAFF20E3FAFF31E1F6FFADF3FBFF00A0C4FF05797D1100000000FFFFFF000000
+          00000000000000000000067A7C0B1BA1BBA4159FBBCF13A1BEE700A0C4FF00A0
+          C4FF25E4FBFFADF3FBFF00A0C4FF05797D110000000000000000FFFFFF000000
+          00000000000000000000000000000000000000000000000000000000000000A0
+          C4FFADF3FBFF00A0C4FF05797D11000000000000000000000000FFFFFF000000
+          00000000000000000000000000000000000000000000000000000000000000A0
+          C4FF00A0C4FF009DBF1400000000000000000000000000000000FFFFFF000000
+          00000000000000000000000000000000000000000000000000000000000000A0
+          C4FF000000000000000000000000000000000000000000000000
+        }
       end
       object N47: TMenuItem
         Caption = '-'
@@ -4737,6 +5513,330 @@ object frDesignerForm: TfrDesignerForm
       object N14: TMenuItem
         Caption = 'Options...'
         OnClick = N14Click
+      end
+    end
+    object PascalScriptMenu: TMenuItem
+      Caption = '&PascalScript'
+      object MenuItemCompile: TMenuItem
+        Action = ActPSCompile
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000BE7A45FFBE7A45FFBE7A45FF0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000BE7A45FFBE7A45FF78553958BE7A45FFE3CDBCFFBE7A45FF7855
+          3958BE7A45FFBE7A45FF00000000000000000000000000000000000000000000
+          0000BE7A45FFE3CDBCFFD2A786FFBE7A45FFC79064FFDAB89DFFC79064FFBE7A
+          45FFD2A786FFE3CDBCFFBE7A45FF000000000000000000000000000000000000
+          0000BE7A45FFD2A786FFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB8
+          9DFFDAB89DFFD2A786FFBE7A45FF000000000000000000000000000000000000
+          000078553958BE7A45FFE3CDBCFFCFA17CFFBD7F4CF8C38656FFBA7A46F4D5AE
+          8FFFDAB89DFFBE7A45FF7855395800000000000000000000000000000000BE7A
+          45FFBE7A45FFC79064FFDAB89DFFBD7F4CF8B78256CD78553959A56F43C0BA7A
+          46F4DAB89DFFC79064FFBE7A45FFBE7A45FF000000000000000000000000BE7A
+          45FFE3CDBCFFDAB89DFFDAB89DFFC38656FF785539590000000078553959C386
+          56FFDAB89DFFDAB89DFFE3CDBCFFBE7A45FF000000000000000000000000BE7A
+          45FFBE7A45FFC79064FFDAB89DFFBA7A46F49C6B42AE785539598F633F97BA7C
+          49EEDAB89DFFC79064FFBE7A45FFBE7A45FF0000000000000000000000000000
+          000078553958BE7A45FFDAB89DFFCFA17CFFBA7A46F4C38656FFBA7A46F4D1A5
+          82FFDAB89DFFBE7A45FF78553958000000000000000000000000000000000000
+          0000BE7A45FFD2A786FFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB8
+          9DFFDAB89DFFD2A786FFBE7A45FF000000000000000000000000000000000000
+          0000BE7A45FFE3CDBCFFD2A786FFBE7A45FFC79064FFDAB89DFFC79064FFBE7A
+          45FFD2A786FFE3CDBCFFBE7A45FF000000000000000000000000000000000000
+          000078553958BE7A45FFBE7A45FF78553958BE7A45FFE3CDBCFFBE7A45FF7855
+          3958BE7A45FFBE7A45FF00000000000000000000000000000000000000000000
+          000000000000000000000000000000000000BE7A45FFBE7A45FFBE7A45FF0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000
+        }
+      end
+      object MenuItemRun: TMenuItem
+        Action = ActPSRun
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000000000
+          000004733AFF21824FFF638272FF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000004733AFF7ACFA4FF2C8C5AFF3D7659FFAEAEAEFF00000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000004733AFF82D8ACFF76D6A6FF3C9D6AFF27744CFFACAEADFF000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000009773FFF83DBAEFF1FC671FF72DEA7FF4BB27FFF177445FFA8ADAAFF0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000004733AFF83DCAFFF11C369FF1ACC73FF69DFA3FF5AC28DFF137643FF9EA7
+          A3FF000000000000000000000000000000000000000000000000000000000000
+          000004733AFFA9DCC1FF10BD65FF11C167FF13C269FF59D395FF67C998FF167C
+          47FF889C92FF0000000000000000000000000000000000000000000000000000
+          000004733AFFA9DCC1FF0DB35EFF0EB660FF0EB660FF0DB45FFF47C484FF70CA
+          9CFF1D824DFF678C79FF00000000000000000000000000000000000000000000
+          000004733AFFA9DCC1FF0CAA58FF12AE5EFF15AF60FF16AD61FF13AA5DFF3AB6
+          77FF75C79DFF288957FF4E8367FF000000000000000000000000000000000000
+          000004733AFFA9DCC1FF2EAD6BFF2BAD6AFF27AB68FF22A964FF1CA55FFF41B2
+          78FF78C69FFF298858FF678C79FF000000000000000000000000000000000000
+          000004733AFFA9DCC1FF36AD70FF32AC6DFF2DAA6AFF28A866FF58BC89FF78C5
+          9DFF1F804EFF839A8EFF00000000000000000000000000000000000000000000
+          000004733AFFA9DCC1FF3EB176FF3AAF73FF36AE70FF6FC598FF71BF97FF187B
+          49FFA6B0ABFF0000000000000000000000000000000000000000000000000000
+          000004733AFFA9DCC1FF45B47BFF47B47CFF82CCA6FF67B68CFF177745FFC1C5
+          C3FF000000000000000000000000000000000000000000000000000000000000
+          000004733AFFA5DABFFF57BB87FF90D2B0FF5BAB82FF23774CFFD4D5D4FF0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000004733AFFA9DCC1FF9BD5B7FF4C9F73FF3D7D5CFF00000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000004733AFFA4D9BEFF3D9366FF5F8873FF0000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000004733AFF2D8859FF859C90FF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000
+        }
+      end
+      object MenuItem3: TMenuItem
+        Action = ActPSPause
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000EEEEEE00EEEE
+          EE00EEEEEE00987050FFA46534FFA46534FF987050FFFBE3BC00FBE3BC009870
+          50FFA46534FFA46534FF987050FF000000000000000000000000987050009870
+          5000987050009F683EFFC99C76FFCDA585FF9F683EFF98705000987050009F68
+          3EFFC99C76FFCDA585FF9F683EFF000000000000000000000000A2663800A266
+          3800A2663800A36535FFD7AC88FFE1C5ADFFA36535FFA2663800A2663800A365
+          35FFD7AC88FFE1C5ADFFA36535FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD8A981FFE6CCB5FFA46534FFA4653400A4653400A465
+          34FFD8A981FFE6CCB5FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD7A77FFFE6CCB5FFA46534FFA4653400A4653400A465
+          34FFD7A77FFFE6CCB5FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD7A981FFE6CDB6FFA46534FFA4653400A4653400A465
+          34FFD7A981FFE6CDB6FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD8AB84FFE6CEB7FFA46534FFA4653400A4653400A465
+          34FFD8AB84FFE6CEB7FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD9AE89FFE6CEB7FFA46534FFA4653400A4653400A465
+          34FFD9AE89FFE6CEB7FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD9B08DFFE6CEB7FFA46534FFA4653400A4653400A465
+          34FFD9B08DFFE6CEB7FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFD9B28FFFE6CEB7FFA46534FFA4653400A4653400A465
+          34FFD9B28FFFE6CEB7FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFDAB391FFE6CEB7FFA46534FFA4653400A4653400A465
+          34FFDAB391FFE6CEB7FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFDAB593FFE6CFB9FFA46534FFA4653400A4653400A465
+          34FFDAB593FFE6CFB9FFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFDBB694FFE7D1BBFFA46534FFA4653400A4653400A465
+          34FFDBB694FFE7D1BBFFA46534FF000000000000000000000000A4653400A465
+          3400A4653400A46534FFDDBC9DFFE7D1BCFFA46534FFA4653400A4653400A465
+          34FFDDBC9DFFE7D1BCFFA46534FF000000000000000000000000996E4C00996E
+          4C00996E4C00A26637FFDCBFA4FFDFC6AFFFA26637FF996E4C00996E4C00A266
+          37FFDCBFA4FFDFC6AFFFA26637FF000000000000000000000000EEEEEE00EEEE
+          EE00EEEEEE00996E4CFFAB7143FFAC7244FF996E4CFFFBE3BC00FBE3BC00996E
+          4CFFAB7143FFAC7244FF996E4CFF000000000000000000000000
+        }
+      end
+      object MenuItem5: TMenuItem
+        Action = ActPSStop
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6393986E6393986E6393986E6393986E6393986E6393986E63939
+          86E6393986E6393986E6393986E6393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE68796F6FF7C8DF7FF7284F8FF687CF8FF5E73FAFF536AFAFF4A63
+          FAFF425CFBFF3A55FCFF334FFCFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6929EF5FF8796F6FF7C8DF7FF7285F8FF687CF9FF5E73F9FF546B
+          FAFF4B63FBFF425CFBFF3955FCFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE69BA7F5FF929FF5FF8796F7FF7C8DF7FF7284F8FF677CF8FF5E73
+          F9FF546BFAFF4A63FBFF415CFBFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6A6AFF4FF9CA7F5FF919FF5FF8796F6FF7D8DF7FF7184F7FF687C
+          F8FF5D73F9FF546AFAFF4A63FBFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6AEB7F3FFA5AFF5FF9CA7F5FF919FF5FF8796F7FF7C8DF7FF7284
+          F8FF687BF9FF5D73F9FF536BFAFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6B7BEF3FFAFB7F4FFA6B0F4FF9BA8F5FF929FF6FF8796F6FF7C8D
+          F7FF7284F8FF677BF8FF5D73F9FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6BFC5F2FFB7BEF3FFAFB7F4FFA5AFF4FF9CA7F5FF929FF6FF8795
+          F6FF7D8DF7FF7284F8FF687CF8FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6C7CAF1FFBFC5F3FFB7BEF3FFAEB7F4FFA6AFF4FF9BA7F5FF929F
+          F6FF8796F6FF7C8DF7FF7284F7FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6CCD0F1FFC6CBF1FFBFC5F2FFB7BFF3FFAFB7F4FFA6AFF5FF9BA8
+          F5FF919FF6FF8796F6FF7D8DF7FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE6D1D4F1FFCCD0F2FFC6CBF2FFBFC5F2FFB7BEF3FFAEB8F3FFA5AF
+          F4FF9BA8F4FF919FF5FF8795F6FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF004550BFE64550BFE64550BFE64550BFE64550BFE64550BFE64550BFE64550
+          BFE64550BFE64550BFE64550BFE64550BFE6FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+        }
+      end
+      object MenuItem4: TMenuItem
+        Action = ActPSStepInto
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+          FF00FFFFFF004E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F
+          4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFFFFFFFF00FFFF
+          FF00FFFFFF00545756FFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFE
+          FEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFFFFFFFF545756FFFFFFFF00FFFF
+          FF00FFFFFF0004733AFFF3F4F4FFF2F3F3FFF1F2F2FFF0F1F1FFF0F0F0FFECEC
+          ECFFEBEBEBFFEAEAEAFFE9E9E9FFEBECECFFFEFEFEFF5C5F5EFFFFFFFF00FFFF
+          FF00FFFFFF00137C46FF04733AFFF4F4F4FFF3F3F3FFF2F3F3FFF1F2F2FF8A8A
+          FFFF8A8AFFFF8A8AFFFF8A8AFFFFEAEAEAFFFEFEFEFF646766FFFFFFFF00FFFF
+          FF00FFFFFF00228552FF1D824EFF04733AFFF4F5F5FFF3F4F4FFF2F3F3FFF2F2
+          F2FFF1F1F1FFF0F0F0FFEFF0F0FFEEEFEFFFFEFEFEFF6C6F6EFF40976AFF3B94
+          66FF369162FF318E5EFF2C8B5AFF278856FF04733AFFF2F3F3FFF1F2F2FFF0F1
+          F1FFEFF0F0FFEEEFEFFFEDEEEEFFF0F0F0FFFEFEFEFF747776FF4FA176FF4A9D
+          72FF459A6EFF40976AFF3B9466FF369162FF318E5EFF04733AFF7171FFFF7171
+          FFFF7171FFFF7171FFFF7171FFFFF1F2F2FFFEFEFEFF7C7F7EFF5DAA82FF58A7
+          7EFF53A37AFF4FA076FF4A9D72FF459A6EFF04733AFFF7F8F8FFF7F8F8FFF6F7
+          F7FFF5F6F6FFF4F5F5FFF3F4F4FFF3F3F3FFFEFEFEFF848786FF6CB38EFF67B0
+          8AFFFFFFFF005DAA82FF58A67EFF04733AFFF7F8F8FFF7F8F8FFF4F5F5FFF4F5
+          F5FFF4F5F5FFF3F4F4FFF2F3F3FFF4F5F5FFFEFEFEFF8C8E8DFF7BBC9AFF76B9
+          96FFFFFFFF006CB38EFF04733AFFF7F8F8FFF7F8F8FFF7F8F8FF5151FFFF5151
+          FFFF5151FFFF5151FFFF5151FFFFF2F3F3FFFEFEFEFF949695FFFFFFFF00FFFF
+          FF00FFFFFF0004733AFFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+          F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFFEFEFEFF9C9E9DFF93CBAEFF8FC9
+          ABFFFFFFFF00A4A6A5FFF7F8F8FFF7F8F8FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5
+          F5FFF4F5F5FFF4F5F5FFF4F5F5FFF7F8F8FFFEFEFEFFA4A6A5FFA7D7BEFFA2D4
+          BAFFFFFFFF00ACAEADFFF7F8F8FFF7F8F8FF0000FFFF0000FFFF0000FFFF0000
+          FFFF0000FFFF0000FFFF0000FFFFF4F5F5FFFEFEFEFFACAEADFFFFFFFF00FFFF
+          FF00FFFFFF00B4B6B5FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+          F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFFEFEFEFFB4B6B5FFC5E9D6FFC0E6
+          D2FFFFFFFF00BCBEBDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBCBEBDFFC7EAD8FFC7EA
+          D8FFFFFFFF00C5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6
+          C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FF
+        }
+      end
+      object MenuItem6: TMenuItem
+        Action = ActPSStepOver
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+          FF00FFFFFF004E4F4FFF258755FF04733AFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F
+          4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFFFFFFFF00FFFF
+          FF00FFFFFF00545756FF2E8D5CFF298958FF04733AFFFFFFFFFFFFFFFFFFFEFE
+          FEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFFFFFFFF545756FFFFFFFF00499D
+          72FF439A6DFF3E9669FF389364FF328F60FF2D8C5BFF04733AFFF7F8F8FFECEC
+          ECFFEBEBEBFFEAEAEAFFE9E9E9FFEBECECFFFEFEFEFF5C5F5EFF59A77EFF53A3
+          7AFF4DA075FF479C71FF42996CFF3C9567FF369263FF318E5EFF04733AFF0000
+          FFFF0000FFFF0000FFFF0000FFFFEAEAEAFFFEFEFEFF646766FF62AC86FF5DA9
+          82FF57A67DFF51A279FF4B9F74FF469B6FFF40986BFF04733AFFF7F8F8FFF2F2
+          F2FFF1F1F1FFF0F0F0FFEFF0F0FFEEEFEFFFFEFEFEFF6C6F6EFF6CB28EFF66AF
+          8AFFFFFFFF00747776FF55A57CFF4FA177FF04733AFFF7F8F8FFF7F8F8FFF0F1
+          F1FFEFF0F0FFEEEFEFFFEDEEEEFFF0F0F0FFFEFEFEFF747776FF76B896FF70B5
+          91FFFFFFFF007C7F7EFF5FAA84FF04733AFFF7F8F8FFF7F8F8FFF7F8F8FF7C7F
+          7EFF7C7F7EFF7C7F7EFF7C7F7EFFF1F2F2FFFEFEFEFF7C7F7EFF7FBE9EFF79BB
+          99FFFFFFFF00848786FF04733AFFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF6F7
+          F7FFF5F6F6FFF4F5F5FFF3F4F4FFF3F3F3FFFEFEFEFF848786FF89C4A6FF83C1
+          A1FFFFFFFF008C8E8DFFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF4F5F5FFF4F5
+          F5FFF4F5F5FFF3F4F4FFF2F3F3FFF4F5F5FFFEFEFEFF8C8E8DFF93CAADFF8DC6
+          A9FFFFFFFF00949695FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FF949695FF9496
+          95FF949695FF949695FF949695FFF2F3F3FFFEFEFEFF949695FF9CD0B5FF96CC
+          B1FFFFFFFF009C9E9DFFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+          F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFFEFEFEFF9C9E9DFFA6D6BDFFA0D2
+          B9FFFFFFFF00A4A6A5FFF7F8F8FFF7F8F8FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5
+          F5FFF4F5F5FFF4F5F5FFF4F5F5FFF7F8F8FFFEFEFEFFA4A6A5FFAFDCC5FFAAD8
+          C0FFA4D5BCFF9ED1B7FF99CEB3FF93CAAEFF8DC7A9FF0000FFFF0000FFFF0000
+          FFFF0000FFFF0000FFFF0000FFFFF4F5F5FFFEFEFEFFACAEADFFB9E2CDFFB3DE
+          C8FFAEDBC4FFA8D7BFFFA2D4BAFF9DD0B6FF97CDB1FFF7F8F8FFF7F8F8FFF7F8
+          F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFFEFEFEFFB4B6B5FFFFFFFF00FFFF
+          FF00FFFFFF00BCBEBDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBCBEBDFFFFFFFF00FFFF
+          FF00FFFFFF00C5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6
+          C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FF
+        }
+      end
+      object MenuItem9: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem7: TMenuItem
+        Action = ActPSBrkpt
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00C3916D9BC38E
+          68FFC08B66FFBE8864FFBB8561FFB9835FFFB6805EFFB47E5CFFB27C5AFFB17B
+          58FFAE7957FFAD7656FFAB7554FFA97353FFA97151FFA370519BC8926CFFCECE
+          CEFFD6D6D6FFD4D4D4FFD2D2D2FFD0D0D0FFCDCDCDFFCBCBCBFFCACACAFFC8C8
+          C8FFC6C6C6FFC5C5C5FFC3C3C3FFC2C2C2FFAFAFAFFFA97251FFCA946EFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAA7353FFCC976FFFFFFF
+          FFFFF7F7F7FFF5F5F5FFF4F4F4FFF3F3F3FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2
+          F2FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2F2FFFFFFFFFFAC7554FFCF9A72FFFFFF
+          FFFFFAFAFAFFF8F8F8FFF7F7F7FFF5F5F5FFF4F4F4FFF3F3F3FFF2F2F2FFF2F2
+          F2FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2F2FFFFFFFFFFAD7856FFD19C73FF9D9D
+          FFFF0E0EFFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202
+          FFFF0202FFFF0202FFFF0202FFFF0808FFFF8585FFFFB07A58FFD49E75FF4C4C
+          FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202
+          FFFF0202FFFF0202FFFF0202FFFF0202FFFF2F2FFFFFB27C5AFFD5A076FFD5D5
+          FFFF5252FEFF3434FFFF3434FFFF3434FFFF3434FEFF3434FEFF3434FEFF3333
+          FEFF3333FDFF3333FDFF3232FDFF4646FCFFC3C3FFFFB57E5CFFD8A279FFFFFF
+          FFFFFDFDFDFFFDFDFDFFFDFDFDFFFDFDFDFFFDFDFDFFFDFDFDFFFCFCFCFFFBFB
+          FBFFFAFAFAFFF8F8F8FFF7F7F7FFF5F5F5FFFFFFFFFFB7815EFFD9A379FFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBA8560FFDBA47AFFD4D4
+          D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4
+          D4FFD4D4D4FFD4D4D4FFD3D3D3FFD3D3D3FFD3D3D3FFBD8763FFDCA77BFFDBA4
+          7AFFDAA379FFD8A279FFD7A178FFD59F76FFD39E74FFD19C73FFCF9A72FFCD97
+          70FFCB956EFFC9946CFFC7916BFFC48F69FFC38D67FFC08B66FFDDAC85FDF1DC
+          CEFFEAC1A0FFE8B992FFE8B992FFE8B992FFE8B992FFE8B992FFE8B992FFCDC8
+          C5FFE8B992FFCDC8C5FFE8B992FF4464FFFFE8C4A7FFC1906FFDDDAC86C2DDB1
+          8DF4DCA77BFFDCA67AFFDAA47AFFD8A279FFD8A179FFD5A076FFD49E75FFD29D
+          73FFCF9A72FFCE9970FFCB966FFFC9946CFFC49A7AF4C39371C2FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+        }
+      end
+      object MenuItem10: TMenuItem
+        Action = ActPSClrBrkpt
+      end
+      object MenuItem11: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem8: TMenuItem
+        Action = ActPSEval
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000000000
+          00040000000B000000150000001F000000270000003000000034000000390000
+          003A00000039000000370202026E090909890F0F0F4B0000001AFFFFFF000000
+          00020015003C0000001500000021000C003300340077005000C700340077000C
+          00340000002302020254333331B8E8D8D8FF32323276FFFFFF00FFFFFF00FFFF
+          FF00004900B3FFFFFF000021000D00470091196F19DD40AA40FD196F19DD0047
+          00910308033D28272799D9CECEFF605C5C913A3A3A4DFFFFFF00FFFFFF00FFFF
+          FF00003C008A003A0066003C00761C6A1CE047AE47FE41A741FF47AE47FE1859
+          18E4132313C3C8C1C1FF354734C839393938FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF0002130220011E01D1062006E51F4A1FFD2A5F2AFF2B662BFF419541FF2650
+          26FDB8B5B5FF253A25DC2E372E331F659D00FFFFFF00FFFFFF00FFFFFF001111
+          112A2826257D7E8274CDC2CBB9F9DCE5D2FFCBDBC4FF81997DFF3C643BFFACAC
+          ACFF2C4C2CF10D2E0D823070A800286BA300FFFFFF00FFFFFF00052D05932B37
+          299ED3C6B8B2D1CBBAECD2D7C3FDD5DDC7FFD7DFC9FFD5DBC7FFC6D2BDFF4970
+          48FF356E35F6002C00A00030000B0030004D002F008AFFFFFF00243124637A81
+          6BCFBBB599F3CCCABAF3D3D8C5FED6DCC8FFD8DFCAFFD1D7C3FFD8DFC8FF8AA1
+          81FF3B6B3BFD003100C6013701CA0137018900340024FFFFFF0038383865E1CF
+          BCB1E8D2BBC0CFD0C0F4D4D9C5FFD8DDC9FFDAE0CBFFD1D7C2FFDAE0CBFFBFC7
+          AAFF416841FF013901C7FFFFFF00FFFFFF00FFFFFF00FFFFFF003E3E3E6FE9D4
+          BEBEE8D2BBC0BCB697EDD7DEC9FEDAE2CCFFDBE3CDFFD0D6C2FFDBE3CDFFCED2
+          B2FF4C754CFD014301B8FFFFFF00FFFFFF00FFFFFF00FFFFFF0043434360D6C6
+          AEB4BEBD99EAB8B794F2BFC09DFCC1C29FFFBDBD9BFFBBBB99FFBDBD9BFFB5BE
+          9DFF3E6B3EF7025202C9025F02AA03660319FFFFFF00FFFFFF0049494943758E
+          63D2D5C9ACD1D9D5C0DED3DAC4F9DAE2CBFFDCE4CDFFDCE4CDFFD6DCC0FF90AB
+          82FF367036E802590268036B0343036C0399FFFFFF00FFFFFF004D4D4D113866
+          35ACD5C1AEA1E4D4BEC8D0D7BFF4D4DCC5FDD9E2CAFFDCE5CCFFAEC198FF4C7D
+          4AF9126B12CB025F0219FFFFFF0003740377FFFFFF00FFFFFF00FFFFFF005151
+          512163605E62B1A3948BACBA93EBF0E9D5FFBACCACFB90B085FE497E47F6D2D2
+          A6FF036E03BFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00545454115555554033613398296629D8256725D51C6B1CCE0A720AC20375
+          03BE03740360FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+        }
       end
     end
     object HelpMenu: TMenuItem
@@ -5066,12 +6166,78 @@ object frDesignerForm: TfrDesignerForm
       ImageIndex = 4
       OnExecute = edtRedoExecute
     end
+    object ActPSCompile: TAction
+      Category = 'PascalScript'
+      Caption = 'Compile'
+      Hint = 'Compile script'
+      ImageIndex = 5
+      OnExecute = ActPSCompileExecute
+    end
+    object ActPSRun: TAction
+      Category = 'PascalScript'
+      Caption = 'Run'
+      Hint = 'Run'
+      ImageIndex = 6
+      OnExecute = ActPSRunExecute
+    end
+    object ActPSPause: TAction
+      Category = 'PascalScript'
+      Caption = 'Pause'
+      Hint = 'Pause'
+      ImageIndex = 7
+      OnExecute = ActPSPauseExecute
+    end
+    object ActPSStop: TAction
+      Category = 'PascalScript'
+      Caption = 'Stop'
+      Hint = 'Stop'
+      ImageIndex = 8
+      OnExecute = ActPSStopExecute
+    end
+    object ActPSStepInto: TAction
+      Category = 'PascalScript'
+      Caption = 'Step into'
+      Hint = 'Step into'
+      ImageIndex = 9
+      OnExecute = ActPSStepIntoExecute
+    end
+    object ActPSStepOver: TAction
+      Category = 'PascalScript'
+      Caption = 'Step over'
+      Hint = 'Step over'
+      ImageIndex = 10
+      OnExecute = ActPSStepOverExecute
+    end
+    object ActPSBrkpt: TAction
+      Category = 'PascalScript'
+      Caption = 'Toggle breakpoint'
+      Hint = 'Toggle breakpoint'
+      ImageIndex = 11
+      OnExecute = ActPSBrkptExecute
+    end
+    object ActPSEval: TAction
+      Category = 'PascalScript'
+      Caption = 'Evaluate variable'
+      HelpKeyword = 'Evaluate variable'
+      ImageIndex = 12
+      OnExecute = ActPSEvalExecute
+    end
+    object ActPSClrMsg: TAction
+      Category = 'PascalScript'
+      Caption = 'Clear messages'
+      OnExecute = ActPSClrMsgExecute
+    end
+    object ActPSClrBrkpt: TAction
+      Category = 'PascalScript'
+      Caption = 'Clear breakpoints'
+      OnExecute = ActPSClrBrkptExecute
+    end
   end
   object ActionsImageList: TImageList
     left = 584
     top = 48
     Bitmap = {
-      4C6905000000100000001000000000000000BD6931FFBD6931FFBD6931FFBD69
+      4C690D000000100000001000000000000000BD6931FFBD6931FFBD6931FFBD69
       31FFBD6931FFBD6931FFBD6931FFBD6931FFBD6D39FFBD6D39FFBD6D39FFBD69
       39FFBD7139FF0000000000000000BD6931FFF7E7D6FFF7E7D6FFFFFFFFFFFFFF
       F7FFFFFFF7FFFFF7F7FFFFF7EFFFFFF7EFFFFFFFF7FFFFFFF7FFFFF7EFFFFFEF
@@ -5231,6 +6397,348 @@ object frDesignerForm: TfrDesignerForm
       C45D000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000FFFFFF000000000000A0C4181AA7C46918A6
       C369000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000BE7A45FFBE7A45FFBE7A45FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000078553958BE7A45FFBE7A
+      45FF78553958BE7A45FFE3CDBCFFBE7A45FF78553958BE7A45FFBE7A45FF0000
+      00000000000000000000000000000000000000000000BE7A45FFE3CDBCFFD2A7
+      86FFBE7A45FFC79064FFDAB89DFFC79064FFBE7A45FFD2A786FFE3CDBCFFBE7A
+      45FF0000000000000000000000000000000000000000BE7A45FFD2A786FFDAB8
+      9DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFD2A786FFBE7A
+      45FF000000000000000000000000000000000000000078553958BE7A45FFDAB8
+      9DFFCFA17CFFBA7A46F4C38656FFBA7A46F4D1A582FFDAB89DFFBE7A45FF7855
+      395800000000000000000000000000000000BE7A45FFBE7A45FFC79064FFDAB8
+      9DFFBA7A46F49C6B42AE785539598F633F97BA7C49EEDAB89DFFC79064FFBE7A
+      45FFBE7A45FF000000000000000000000000BE7A45FFE3CDBCFFDAB89DFFDAB8
+      9DFFC38656FF785539590000000078553959C38656FFDAB89DFFDAB89DFFE3CD
+      BCFFBE7A45FF000000000000000000000000BE7A45FFBE7A45FFC79064FFDAB8
+      9DFFBD7F4CF8B78256CD78553959A56F43C0BA7A46F4DAB89DFFC79064FFBE7A
+      45FFBE7A45FF0000000000000000000000000000000078553958BE7A45FFE3CD
+      BCFFCFA17CFFBD7F4CF8C38656FFBA7A46F4D5AE8FFFDAB89DFFBE7A45FF7855
+      39580000000000000000000000000000000000000000BE7A45FFD2A786FFDAB8
+      9DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFDAB89DFFD2A786FFBE7A
+      45FF0000000000000000000000000000000000000000BE7A45FFE3CDBCFFD2A7
+      86FFBE7A45FFC79064FFDAB89DFFC79064FFBE7A45FFD2A786FFE3CDBCFFBE7A
+      45FF000000000000000000000000000000000000000000000000BE7A45FFBE7A
+      45FF78553958BE7A45FFE3CDBCFFBE7A45FF78553958BE7A45FFBE7A45FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000BE7A45FFBE7A45FFBE7A45FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF2D8859FF859C
+      90FF000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA4D9BEFF3D93
+      66FF5F8873FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF9BD5
+      B7FF4C9F73FF3D7D5CFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA5DABFFF57BB
+      87FF90D2B0FF5BAB82FF23774CFFD4D5D4FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF45B4
+      7BFF47B47CFF82CCA6FF67B68CFF177745FFC1C5C3FF00000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF3EB1
+      76FF3AAF73FF36AE70FF6FC598FF71BF97FF187B49FFA6B0ABFF000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF36AD
+      70FF32AC6DFF2DAA6AFF28A866FF58BC89FF78C59DFF1F804EFF839A8EFF0000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF2EAD
+      6BFF2BAD6AFF27AB68FF22A964FF1CA55FFF41B278FF78C69FFF298858FF678C
+      79FF000000000000000000000000000000000000000004733AFFA9DCC1FF0CAA
+      58FF12AE5EFF15AF60FF16AD61FF13AA5DFF3AB677FF75C79DFF288957FF4E83
+      67FF000000000000000000000000000000000000000004733AFFA9DCC1FF0DB3
+      5EFF0EB660FF0EB660FF0DB45FFF47C484FF70CA9CFF1D824DFF678C79FF0000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF10BD
+      65FF11C167FF13C269FF59D395FF67C998FF167C47FF889C92FF000000000000
+      0000000000000000000000000000000000000000000004733AFF83DCAFFF11C3
+      69FF1ACC73FF69DFA3FF5AC28DFF137643FF9EA7A3FF00000000000000000000
+      0000000000000000000000000000000000000000000009773FFF83DBAEFF1FC6
+      71FF72DEA7FF4BB27FFF177445FFA8ADAAFF0000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF82D8ACFF76D6
+      A6FF3C9D6AFF27744CFFACAEADFF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF7ACFA4FF2C8C
+      5AFF3D7659FFAEAEAEFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF21824FFF6382
+      72FF000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000EEEEEE00EEEEEE00EEEEEE00996E4CFFAB71
+      43FFAC7244FF996E4CFFFBE3BC00FBE3BC00996E4CFFAB7143FFAC7244FF996E
+      4CFF000000000000000000000000996E4C00996E4C00996E4C00A26637FFDCBF
+      A4FFDFC6AFFFA26637FF996E4C00996E4C00A26637FFDCBFA4FFDFC6AFFFA266
+      37FF000000000000000000000000A4653400A4653400A4653400A46534FFDDBC
+      9DFFE7D1BCFFA46534FFA4653400A4653400A46534FFDDBC9DFFE7D1BCFFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFDBB6
+      94FFE7D1BBFFA46534FFA4653400A4653400A46534FFDBB694FFE7D1BBFFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFDAB5
+      93FFE6CFB9FFA46534FFA4653400A4653400A46534FFDAB593FFE6CFB9FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFDAB3
+      91FFE6CEB7FFA46534FFA4653400A4653400A46534FFDAB391FFE6CEB7FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD9B2
+      8FFFE6CEB7FFA46534FFA4653400A4653400A46534FFD9B28FFFE6CEB7FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD9B0
+      8DFFE6CEB7FFA46534FFA4653400A4653400A46534FFD9B08DFFE6CEB7FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD9AE
+      89FFE6CEB7FFA46534FFA4653400A4653400A46534FFD9AE89FFE6CEB7FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD8AB
+      84FFE6CEB7FFA46534FFA4653400A4653400A46534FFD8AB84FFE6CEB7FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD7A9
+      81FFE6CDB6FFA46534FFA4653400A4653400A46534FFD7A981FFE6CDB6FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD7A7
+      7FFFE6CCB5FFA46534FFA4653400A4653400A46534FFD7A77FFFE6CCB5FFA465
+      34FF000000000000000000000000A4653400A4653400A4653400A46534FFD8A9
+      81FFE6CCB5FFA46534FFA4653400A4653400A46534FFD8A981FFE6CCB5FFA465
+      34FF000000000000000000000000A2663800A2663800A2663800A36535FFD7AC
+      88FFE1C5ADFFA36535FFA2663800A2663800A36535FFD7AC88FFE1C5ADFFA365
+      35FF0000000000000000000000009870500098705000987050009F683EFFC99C
+      76FFCDA585FF9F683EFF98705000987050009F683EFFC99C76FFCDA585FF9F68
+      3EFF000000000000000000000000EEEEEE00EEEEEE00EEEEEE00987050FFA465
+      34FFA46534FF987050FFFBE3BC00FBE3BC00987050FFA46534FFA46534FF9870
+      50FF000000000000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE64550BFE64550
+      BFE64550BFE64550BFE64550BFE64550BFE64550BFE64550BFE64550BFE64550
+      BFE64550BFE6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6D1D4F1FFCCD0
+      F2FFC6CBF2FFBFC5F2FFB7BEF3FFAEB8F3FFA5AFF4FF9BA8F4FF919FF5FF8795
+      F6FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6CCD0F1FFC6CB
+      F1FFBFC5F2FFB7BFF3FFAFB7F4FFA6AFF5FF9BA8F5FF919FF6FF8796F6FF7D8D
+      F7FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6C7CAF1FFBFC5
+      F3FFB7BEF3FFAEB7F4FFA6AFF4FF9BA7F5FF929FF6FF8796F6FF7C8DF7FF7284
+      F7FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6BFC5F2FFB7BE
+      F3FFAFB7F4FFA5AFF4FF9CA7F5FF929FF6FF8795F6FF7D8DF7FF7284F8FF687C
+      F8FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6B7BEF3FFAFB7
+      F4FFA6B0F4FF9BA8F5FF929FF6FF8796F6FF7C8DF7FF7284F8FF677BF8FF5D73
+      F9FF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6AEB7F3FFA5AF
+      F5FF9CA7F5FF919FF5FF8796F7FF7C8DF7FF7284F8FF687BF9FF5D73F9FF536B
+      FAFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6A6AFF4FF9CA7
+      F5FF919FF5FF8796F6FF7D8DF7FF7184F7FF687CF8FF5D73F9FF546AFAFF4A63
+      FBFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE69BA7F5FF929F
+      F5FF8796F7FF7C8DF7FF7284F8FF677CF8FF5E73F9FF546BFAFF4A63FBFF415C
+      FBFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6929EF5FF8796
+      F6FF7C8DF7FF7285F8FF687CF9FF5E73F9FF546BFAFF4B63FBFF425CFBFF3955
+      FCFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE68796F6FF7C8D
+      F7FF7284F8FF687CF8FF5E73FAFF536AFAFF4A63FAFF425CFBFF3A55FCFF334F
+      FCFF393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF004550BFE6393986E63939
+      86E6393986E6393986E6393986E6393986E6393986E6393986E6393986E63939
+      86E6393986E6FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00C7EAD8FFC7EAD8FFFFFFFF00C5C6C6FFC5C6
+      C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6
+      C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5E9D6FFC0E6D2FFFFFFFF00BCBEBDFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFBCBEBDFFFFFFFF00FFFFFF00FFFFFF00B4B6B5FFF7F8
+      F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+      F8FFF7F8F8FFFEFEFEFFB4B6B5FFA7D7BEFFA2D4BAFFFFFFFF00ACAEADFFF7F8
+      F8FFF7F8F8FF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000
+      FFFFF4F5F5FFFEFEFEFFACAEADFF93CBAEFF8FC9ABFFFFFFFF00A4A6A5FFF7F8
+      F8FFF7F8F8FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5
+      F5FFF7F8F8FFFEFEFEFFA4A6A5FFFFFFFF00FFFFFF00FFFFFF0004733AFFF7F8
+      F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+      F8FFF7F8F8FFFEFEFEFF9C9E9DFF7BBC9AFF76B996FFFFFFFF006CB38EFF0473
+      3AFFF7F8F8FFF7F8F8FFF7F8F8FF5151FFFF5151FFFF5151FFFF5151FFFF5151
+      FFFFF2F3F3FFFEFEFEFF949695FF6CB38EFF67B08AFFFFFFFF005DAA82FF58A6
+      7EFF04733AFFF7F8F8FFF7F8F8FFF4F5F5FFF4F5F5FFF4F5F5FFF3F4F4FFF2F3
+      F3FFF4F5F5FFFEFEFEFF8C8E8DFF5DAA82FF58A77EFF53A37AFF4FA076FF4A9D
+      72FF459A6EFF04733AFFF7F8F8FFF7F8F8FFF6F7F7FFF5F6F6FFF4F5F5FFF3F4
+      F4FFF3F3F3FFFEFEFEFF848786FF4FA176FF4A9D72FF459A6EFF40976AFF3B94
+      66FF369162FF318E5EFF04733AFF7171FFFF7171FFFF7171FFFF7171FFFF7171
+      FFFFF1F2F2FFFEFEFEFF7C7F7EFF40976AFF3B9466FF369162FF318E5EFF2C8B
+      5AFF278856FF04733AFFF2F3F3FFF1F2F2FFF0F1F1FFEFF0F0FFEEEFEFFFEDEE
+      EEFFF0F0F0FFFEFEFEFF747776FFFFFFFF00FFFFFF00FFFFFF00228552FF1D82
+      4EFF04733AFFF4F5F5FFF3F4F4FFF2F3F3FFF2F2F2FFF1F1F1FFF0F0F0FFEFF0
+      F0FFEEEFEFFFFEFEFEFF6C6F6EFFFFFFFF00FFFFFF00FFFFFF00137C46FF0473
+      3AFFF4F4F4FFF3F3F3FFF2F3F3FFF1F2F2FF8A8AFFFF8A8AFFFF8A8AFFFF8A8A
+      FFFFEAEAEAFFFEFEFEFF646766FFFFFFFF00FFFFFF00FFFFFF0004733AFFF3F4
+      F4FFF2F3F3FFF1F2F2FFF0F1F1FFF0F0F0FFECECECFFEBEBEBFFEAEAEAFFE9E9
+      E9FFEBECECFFFEFEFEFF5C5F5EFFFFFFFF00FFFFFF00FFFFFF00545756FFFEFE
+      FEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFE
+      FEFFFEFEFEFFFFFFFFFF545756FFFFFFFF00FFFFFF00FFFFFF004E4F4FFF4E4F
+      4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F
+      4FFF4E4F4FFF4E4F4FFF4E4F4FFFFFFFFF00FFFFFF00FFFFFF00C5C6C6FFC5C6
+      C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6C6FFC5C6
+      C6FFC5C6C6FFC5C6C6FFC5C6C6FFFFFFFF00FFFFFF00FFFFFF00BCBEBDFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFBCBEBDFFB9E2CDFFB3DEC8FFAEDBC4FFA8D7BFFFA2D4
+      BAFF9DD0B6FF97CDB1FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+      F8FFF7F8F8FFFEFEFEFFB4B6B5FFAFDCC5FFAAD8C0FFA4D5BCFF9ED1B7FF99CE
+      B3FF93CAAEFF8DC7A9FF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000
+      FFFFF4F5F5FFFEFEFEFFACAEADFFA6D6BDFFA0D2B9FFFFFFFF00A4A6A5FFF7F8
+      F8FFF7F8F8FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5F5FFF4F5
+      F5FFF7F8F8FFFEFEFEFFA4A6A5FF9CD0B5FF96CCB1FFFFFFFF009C9E9DFFF7F8
+      F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF7F8
+      F8FFF7F8F8FFFEFEFEFF9C9E9DFF93CAADFF8DC6A9FFFFFFFF00949695FFF7F8
+      F8FFF7F8F8FFF7F8F8FFF7F8F8FF949695FF949695FF949695FF949695FF9496
+      95FFF2F3F3FFFEFEFEFF949695FF89C4A6FF83C1A1FFFFFFFF008C8E8DFFF7F8
+      F8FFF7F8F8FFF7F8F8FFF7F8F8FFF4F5F5FFF4F5F5FFF4F5F5FFF3F4F4FFF2F3
+      F3FFF4F5F5FFFEFEFEFF8C8E8DFF7FBE9EFF79BB99FFFFFFFF00848786FF0473
+      3AFFF7F8F8FFF7F8F8FFF7F8F8FFF7F8F8FFF6F7F7FFF5F6F6FFF4F5F5FFF3F4
+      F4FFF3F3F3FFFEFEFEFF848786FF76B896FF70B591FFFFFFFF007C7F7EFF5FAA
+      84FF04733AFFF7F8F8FFF7F8F8FFF7F8F8FF7C7F7EFF7C7F7EFF7C7F7EFF7C7F
+      7EFFF1F2F2FFFEFEFEFF7C7F7EFF6CB28EFF66AF8AFFFFFFFF00747776FF55A5
+      7CFF4FA177FF04733AFFF7F8F8FFF7F8F8FFF0F1F1FFEFF0F0FFEEEFEFFFEDEE
+      EEFFF0F0F0FFFEFEFEFF747776FF62AC86FF5DA982FF57A67DFF51A279FF4B9F
+      74FF469B6FFF40986BFF04733AFFF7F8F8FFF2F2F2FFF1F1F1FFF0F0F0FFEFF0
+      F0FFEEEFEFFFFEFEFEFF6C6F6EFF59A77EFF53A37AFF4DA075FF479C71FF4299
+      6CFF3C9567FF369263FF318E5EFF04733AFF0000FFFF0000FFFF0000FFFF0000
+      FFFFEAEAEAFFFEFEFEFF646766FFFFFFFF00499D72FF439A6DFF3E9669FF3893
+      64FF328F60FF2D8C5BFF04733AFFF7F8F8FFECECECFFEBEBEBFFEAEAEAFFE9E9
+      E9FFEBECECFFFEFEFEFF5C5F5EFFFFFFFF00FFFFFF00FFFFFF00545756FF2E8D
+      5CFF298958FF04733AFFFFFFFFFFFFFFFFFFFEFEFEFFFEFEFEFFFEFEFEFFFEFE
+      FEFFFEFEFEFFFFFFFFFF545756FFFFFFFF00FFFFFF00FFFFFF004E4F4FFF2587
+      55FF04733AFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F4FFF4E4F
+      4FFF4E4F4FFF4E4F4FFF4E4F4FFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00DDAC86C2DDB18DF4DCA77BFFDCA67AFFDAA4
+      7AFFD8A279FFD8A179FFD5A076FFD49E75FFD29D73FFCF9A72FFCE9970FFCB96
+      6FFFC9946CFFC49A7AF4C39371C2DDAC85FDF1DCCEFFEAC1A0FFE8B992FFE8B9
+      92FFE8B992FFE8B992FFE8B992FFE8B992FFCDC8C5FFE8B992FFCDC8C5FFE8B9
+      92FF4464FFFFE8C4A7FFC1906FFDDCA77BFFDBA47AFFDAA379FFD8A279FFD7A1
+      78FFD59F76FFD39E74FFD19C73FFCF9A72FFCD9770FFCB956EFFC9946CFFC791
+      6BFFC48F69FFC38D67FFC08B66FFDBA47AFFD4D4D4FFD4D4D4FFD4D4D4FFD4D4
+      D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD4D4D4FFD3D3
+      D3FFD3D3D3FFD3D3D3FFBD8763FFD9A379FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFBA8560FFD8A279FFFFFFFFFFFDFDFDFFFDFDFDFFFDFD
+      FDFFFDFDFDFFFDFDFDFFFDFDFDFFFCFCFCFFFBFBFBFFFAFAFAFFF8F8F8FFF7F7
+      F7FFF5F5F5FFFFFFFFFFB7815EFFD5A076FFD5D5FFFF5252FEFF3434FFFF3434
+      FFFF3434FFFF3434FEFF3434FEFF3434FEFF3333FEFF3333FDFF3333FDFF3232
+      FDFF4646FCFFC3C3FFFFB57E5CFFD49E75FF4C4CFFFF0202FFFF0202FFFF0202
+      FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202
+      FFFF0202FFFF2F2FFFFFB27C5AFFD19C73FF9D9DFFFF0E0EFFFF0202FFFF0202
+      FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202FFFF0202
+      FFFF0808FFFF8585FFFFB07A58FFCF9A72FFFFFFFFFFFAFAFAFFF8F8F8FFF7F7
+      F7FFF5F5F5FFF4F4F4FFF3F3F3FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2
+      F2FFF2F2F2FFFFFFFFFFAD7856FFCC976FFFFFFFFFFFF7F7F7FFF5F5F5FFF4F4
+      F4FFF3F3F3FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2F2FFF2F2
+      F2FFF2F2F2FFFFFFFFFFAC7554FFCA946EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFAA7353FFC8926CFFCECECEFFD6D6D6FFD4D4D4FFD2D2
+      D2FFD0D0D0FFCDCDCDFFCBCBCBFFCACACAFFC8C8C8FFC6C6C6FFC5C5C5FFC3C3
+      C3FFC2C2C2FFAFAFAFFFA97251FFC3916D9BC38E68FFC08B66FFBE8864FFBB85
+      61FFB9835FFFB6805EFFB47E5CFFB27C5AFFB17B58FFAE7957FFAD7656FFAB75
+      54FFA97353FFA97151FFA370519BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0054545411555555403361
+      3398296629D8256725D51C6B1CCE0A720AC2037503BE03740360FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF005151512163605E62B1A3948BACBA
+      93EBF0E9D5FFBACCACFB90B085FE497E47F6D2D2A6FF036E03BFFFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF004D4D4D11386635ACD5C1AEA1E4D4BEC8D0D7
+      BFF4D4DCC5FDD9E2CAFFDCE5CCFFAEC198FF4C7D4AF9126B12CB025F0219FFFF
+      FF0003740377FFFFFF00FFFFFF0049494943758E63D2D5C9ACD1D9D5C0DED3DA
+      C4F9DAE2CBFFDCE4CDFFDCE4CDFFD6DCC0FF90AB82FF367036E802590268036B
+      0343036C0399FFFFFF00FFFFFF0043434360D6C6AEB4BEBD99EAB8B794F2BFC0
+      9DFCC1C29FFFBDBD9BFFBBBB99FFBDBD9BFFB5BE9DFF3E6B3EF7025202C9025F
+      02AA03660319FFFFFF00FFFFFF003E3E3E6FE9D4BEBEE8D2BBC0BCB697EDD7DE
+      C9FEDAE2CCFFDBE3CDFFD0D6C2FFDBE3CDFFCED2B2FF4C754CFD014301B8FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF0038383865E1CFBCB1E8D2BBC0CFD0C0F4D4D9
+      C5FFD8DDC9FFDAE0CBFFD1D7C2FFDAE0CBFFBFC7AAFF416841FF013901C7FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00243124637A816BCFBBB599F3CCCABAF3D3D8
+      C5FED6DCC8FFD8DFCAFFD1D7C3FFD8DFC8FF8AA181FF3B6B3BFD003100C60137
+      01CA0137018900340024FFFFFF00052D05932B37299ED3C6B8B2D1CBBAECD2D7
+      C3FDD5DDC7FFD7DFC9FFD5DBC7FFC6D2BDFF497048FF356E35F6002C00A00030
+      000B0030004D002F008AFFFFFF00FFFFFF001111112A2826257D7E8274CDC2CB
+      B9F9DCE5D2FFCBDBC4FF81997DFF3C643BFFACACACFF2C4C2CF10D2E0D823070
+      A800286BA300FFFFFF00FFFFFF00FFFFFF00FFFFFF0002130220011E01D10620
+      06E51F4A1FFD2A5F2AFF2B662BFF419541FF265026FDB8B5B5FF253A25DC2E37
+      2E331F659D00FFFFFF00FFFFFF00FFFFFF00FFFFFF00003C008A003A0066003C
+      00761C6A1CE047AE47FE41A741FF47AE47FE185918E4132313C3C8C1C1FF3547
+      34C839393938FFFFFF00FFFFFF00FFFFFF00FFFFFF00004900B3FFFFFF000021
+      000D00470091196F19DD40AA40FD196F19DD004700910308033D28272799D9CE
+      CEFF605C5C913A3A3A4DFFFFFF00FFFFFF00000000020015003C000000150000
+      0021000C003300340077005000C700340077000C003400000023020202543333
+      31B8E8D8D8FF32323276FFFFFF0000000000000000040000000B000000150000
+      001F000000270000003000000034000000390000003A00000039000000370202
+      026E090909890F0F0F4B0000001A
+    }
+  end
+  object SynPasSyn1: TSynPasSyn
+    Enabled = False
+    CompilerMode = pcmDelphi
+    NestedComments = False
+    left = 376
+    top = 200
+  end
+  object PopupMenuMsg: TPopupMenu
+    left = 408
+    top = 312
+  end
+  object PopupMenuBrkpt: TPopupMenu
+    left = 472
+    top = 313
+  end
+  object ImageListSynPS: TImageList
+    left = 448
+    top = 200
+    Bitmap = {
+      4C690200000010000000100000000000000000000000D7D6F0FFA2B1F6FF7C8E
+      EEFF697EECFF8193EFFFABB7F7FFE4DDEBFF0000000000000000000000000000
+      000000000000000000000000000000000000ABB1ECFF7386EDFF6076EBFF5D73
+      EAFF5B71EAFF5E74EAFF5E74EAFF7B8BEDFFC2C1E8FF00000000000000000000
+      0000000000000000000000000000CFCFEEFF687BEBFF485FE8FF485FE7FF4B61
+      E7FF4C62E7FF4B61E7FF28D265FF5468E8FF808EECFFD3D1EFFF000000000000
+      00000000000000000000000000008796F0FF485DE6FF334AE2FF334AE2FF334A
+      E2FF334AE2FF28D265FF28D265FF5468E8FF5468E8FF6F7CDCFF000000000000
+      00000000000000000000000000004E60E4FF3448E0FF3448E0FF3448E0FF3448
+      E0FF3448E0FF28D265FF5468E8FF3448E0FF354AE0FF3A4BD1FF000000000000
+      00000000000000000000000000003647DCFF1E32D8FF1E32D8FF1E32D8FF1E32
+      D8FF28D265FF28D265FF5468E8FF1E32D8FF1C30D8FF2838CAFF000000000000
+      00000000000000000000000000004552DBFF2535D6FF28D265FF28D265FF2737
+      D6FF28D265FF5468E8FF2737D6FF2434D5FF2837D7FF323EC9FF000000000000
+      0000000000000000000000000000818AE8FF2331D4FF5468E8FF28D265FF28D2
+      65FF28D265FF5468E8FF1221D0FF0D1CCFFF3745D9FF6B74D4FF000000000000
+      0000000000000000000000000000D7CEE6FF4953D9FF0D1CCEFF5468E8FF28D2
+      65FF5468E8FF0E1CCDFF0815CBFF0D1CCFFF676DDBFFE0D6E7FF000000000000
+      000000000000000000000000000000000000ADA8DFFF5A62D9FF2E3AD3FF1D29
+      CFFF1420CDFF202CCFFF323ED4FF646AD9FFC0B7DEFF00000000000000000000
+      00000000000000000000000000000000000000000000CCC9E9FF676ED2FF313A
+      C5FF1A24C0FF3A42C6FF7179D3FFE0D7E6FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF2D8859FF859C
+      90FF000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA4D9BEFF3D93
+      66FF5F8873FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF9BD5
+      B7FF4C9F73FF3D7D5CFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA5DABFFF57BB
+      87FF90D2B0FF5BAB82FF23774CFFD4D5D4FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF45B4
+      7BFF47B47CFF82CCA6FF67B68CFF177745FFC1C5C3FF00000000000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF3EB1
+      76FF3AAF73FF36AE70FF6FC598FF71BF97FF187B49FFA6B0ABFF000000000000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF36AD
+      70FF32AC6DFF2DAA6AFF28A866FF58BC89FF78C59DFF1F804EFF839A8EFF0000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF2EAD
+      6BFF2BAD6AFF27AB68FF22A964FF1CA55FFF41B278FF78C69FFF298858FF678C
+      79FF000000000000000000000000000000000000000004733AFFA9DCC1FF0CAA
+      58FF12AE5EFF15AF60FF16AD61FF13AA5DFF3AB677FF75C79DFF288957FF4E83
+      67FF000000000000000000000000000000000000000004733AFFA9DCC1FF0DB3
+      5EFF0EB660FF0EB660FF0DB45FFF47C484FF70CA9CFF1D824DFF678C79FF0000
+      0000000000000000000000000000000000000000000004733AFFA9DCC1FF10BD
+      65FF11C167FF13C269FF59D395FF67C998FF167C47FF889C92FF000000000000
+      0000000000000000000000000000000000000000000004733AFF83DCAFFF11C3
+      69FF1ACC73FF69DFA3FF5AC28DFF137643FF9EA7A3FF00000000000000000000
+      0000000000000000000000000000000000000000000009773FFF83DBAEFF1FC6
+      71FF72DEA7FF4BB27FFF177445FFA8ADAAFF0000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF82D8ACFF76D6
+      A6FF3C9D6AFF27744CFFACAEADFF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF7ACFA4FF2C8C
+      5AFF3D7659FFAEAEAEFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000004733AFF21824FFF6382
+      72FF000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000
     }
   end

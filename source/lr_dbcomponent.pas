@@ -5,7 +5,7 @@ unit LR_DBComponent;
 interface
 
 uses
-  Classes, SysUtils, DB, LR_Class, LR_DBSet;
+  Classes, SysUtils, DB, LR_Class, LR_DBSet, LR_DSet;
 
 type
   { TLRDataSetControl }
@@ -17,9 +17,14 @@ type
     FlrDataSource:TDataSource;
     FDS:TDataSet;
     FDataSource: string;
+    function GetDisplayLabel(AFieldName: String): String;
+    function GetDisplayWidth(AFieldName: String): Integer;
     function GetFieldCount: integer;
     function GetActive: boolean;
     function GetEOF: boolean;
+    function GetFieldName(AIndex: Integer): String;
+    function GetFieldText(AFieldName: String): String;
+    function GetFieldValue(AFieldName: String): Variant;
     function GetRecordCount: integer;
     procedure SetActive(AValue: boolean);
     procedure SetDataSet(AValue: TDataSet);
@@ -36,9 +41,22 @@ type
 
     procedure LoadFromXML(XML: TLrXMLConfig; const Path: String); override;
     procedure SaveToXML(XML: TLrXMLConfig; const Path: String); override;
+
+    procedure Open;
+    procedure Close;
+    procedure First;
+    procedure Next;
+    procedure Last;
+    procedure Prior;
+
     property DataSet:TDataSet read FDS write SetDataSet;
     property lrDBDataSet:TfrDBDataSet read FlrDBDataSet;
     property lrDataSource:TDataSource read FlrDataSource;
+    property FieldValue[AFieldName: String]: Variant read GetFieldValue;
+    property FieldText[AFieldName: String]: String read GetFieldText;
+    property FieldName[AIndex: Integer]: String read GetFieldName;
+    property DisplayWidth[AFieldName: String]: Integer read GetDisplayWidth;
+    property DisplayLabel[AFieldName: String]: String read GetDisplayLabel;
   published
     property Active:boolean read GetActive write SetActive;
     property EOF:boolean read GetEOF;
@@ -61,6 +79,16 @@ begin
     Result:=0;
 end;
 
+function TLRDataSetControl.GetDisplayWidth(AFieldName: String): Integer;
+begin
+  Result := DataSet.FieldByName(AFieldName).DisplayWidth;
+end;
+
+function TLRDataSetControl.GetDisplayLabel(AFieldName: String): String;
+begin
+  Result := DataSet.FieldByName(AFieldName).DisplayLabel;
+end;
+
 function TLRDataSetControl.GetActive: boolean;
 begin
   Result:=FDS.Active
@@ -72,6 +100,21 @@ begin
     Result:=FDS.EOF
   else
     Result:=true;
+end;
+
+function TLRDataSetControl.GetFieldName(AIndex: Integer): String;
+begin
+  Result := DataSet.Fields[AIndex].FieldName;
+end;
+
+function TLRDataSetControl.GetFieldText(AFieldName: String): String;
+begin
+  Result := DataSet.FieldByName(AFieldName).DisplayText;
+end;
+
+function TLRDataSetControl.GetFieldValue(AFieldName: String): Variant;
+begin
+  Result := DataSet.FieldByName(AFieldName).Value;
 end;
 
 function TLRDataSetControl.GetRecordCount: integer;
@@ -179,6 +222,36 @@ begin
   inherited SaveToXML(XML, Path);
   XML.SetValue(Path+'Active/Value', Active);
   XML.SetValue(Path + 'DataSource/Value'{%H-}, FDataSource);
+end;
+
+procedure TLRDataSetControl.Open;
+begin
+  DataSet.Open;
+end;
+
+procedure TLRDataSetControl.Close;
+begin
+  DataSet.Close;
+end;
+
+procedure TLRDataSetControl.First;
+begin
+  DataSet.First;
+end;
+
+procedure TLRDataSetControl.Next;
+begin
+  DataSet.Next;
+end;
+
+procedure TLRDataSetControl.Last;
+begin
+  DataSet.Last;
+end;
+
+procedure TLRDataSetControl.Prior;
+begin
+  DataSet.Prior;
 end;
 
 type

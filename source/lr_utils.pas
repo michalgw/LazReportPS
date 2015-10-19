@@ -560,6 +560,12 @@ begin
                     break;
                   end;
                 end;
+                if TfrObject(CurReport.Pages[i].Objects[j]) is TlrUserDSControl then
+                  if TlrUserDSControl(CurReport.Pages[i].Objects[j]).UserDS.Name = S2 then
+                  begin
+                    Result:=TlrUserDSControl(CurReport.Pages[i].Objects[j]).UserDS;
+                    break;
+                  end;
               end;
               break;
             end
@@ -646,6 +652,11 @@ begin
           if TfrObject(CurReport.Pages[i].Objects[j]) is TLRDataSetControl then
           begin
             S:=CurReport.Pages[i].Name+'.'+TLRDataSetControl(CurReport.Pages[i].Objects[j]).lrDBDataSet.Name;
+            List.Add(S);
+          end;
+          if TfrObject(CurReport.Pages[i].Objects[j]) is TlrUserDSControl then
+          begin
+            S := CurReport.Pages[i].Name+'.'+TlrUserDSControl(CurReport.Pages[i].Objects[j]).UserDS.Name;
             List.Add(S);
           end;
         end;
@@ -756,6 +767,7 @@ begin
     gtBand     : result:='gtBand';
     gtSubReport: result:='gtSubReport';
     gtLine     : result:='gtLine';
+    gtUserDS   : result:='gtUserDS';
     gtAddIn    : result:='gtAddIn';
   end;
 end;
@@ -779,7 +791,10 @@ begin
         if SameText(St,'gtLine') then
           result:=gtLine
         else
-         if SameText(St,'gtAddIn') then
+         if SameText(St, 'gtUserDS') then
+          result := gtUserDS
+         else
+          if SameText(St,'gtAddIn') then
            result:=gtAddIn;
 end;
 

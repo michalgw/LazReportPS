@@ -36,7 +36,8 @@ interface
 
 uses
   Classes, SysUtils, Graphics, DB, LR_Class, Controls, StdCtrls, CheckLst,
-  LMessages, LCLType, LCLIntf, Buttons, EditBtn, Themes, ButtonPanel, ExtCtrls;
+  LMessages, LCLType, LCLIntf, Buttons, EditBtn, Themes, ButtonPanel, ExtCtrls,
+  LR_DSet;
 
 type
   TLRDialogControls = class(TComponent)
@@ -46,6 +47,7 @@ type
 
   TlrVisualControl = class(TfrControl)
   private
+    FPSOnClick: String;
     function GetAutoSize: Boolean;
     function GetCaption: string;
     function GetColor: TColor;
@@ -68,6 +70,7 @@ type
     procedure SetName(const AValue: string); override;
     procedure AfterCreate;override;
     function CreateControl:TControl;virtual;abstract;
+    procedure PSExecOnClick(ProcName: String; VControl: TlrVisualControl);
   public
     constructor Create(AOwnerPage:TfrPage); override;
     destructor Destroy; override;
@@ -85,6 +88,7 @@ type
     property Font:TFont read GetFont write SetFont;
     property Hint:string read GetHint write SetHint;
     property OnClick:TfrScriptStrings read GetOnClick write SetOnClick;
+    property PSOnClick: String read FPSOnClick write FPSOnClick;
   published
     property Enabled:boolean read GetEnabled write SetEnabled;
   end;
@@ -115,6 +119,7 @@ type
     property Font;
     property Hint;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrEdit }
@@ -134,6 +139,7 @@ type
     property Text;
     property Hint;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrMemo }
@@ -156,6 +162,7 @@ type
     property Memo;
     property Hint;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrButton }
@@ -180,6 +187,7 @@ type
     property Hint;
     property Kind: TBitBtnKind read GetKind write SetKind;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrCheckBox }
@@ -205,6 +213,7 @@ type
     property Hint;
     property Checked:boolean read GetChecked write SetChecked;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrRadioButton }
@@ -240,6 +249,7 @@ type
     property ItemIndex:integer read GetItemIndex write SetItemIndex;
     property Hint;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrComboBox }
@@ -273,6 +283,7 @@ type
     property ItemIndex:integer read GetItemIndex write SetItemIndex;
     property DropDownCount:integer read GetDropDownCount write SetDropDownCount;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrDateEdit }
@@ -295,6 +306,7 @@ type
     property Hint;
     property Date:TDateTime read GetDate write SetDate;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrButtonPanel }
@@ -323,15 +335,18 @@ type
     property Text;
     property Hint;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrCheckListBox }
 
   TlrCheckListBox = class(TlrVisualControl)
   private
+    function GetChecked(AIndex: Integer): Boolean;
     function GetItemIndex: integer;
     function GetItems: TStrings;
     function GetItemsCount: integer;
+    procedure SetChecked(AIndex: Integer; AValue: Boolean);
     procedure SetItemIndex(AValue: integer);
     procedure SetItems(AValue: TStrings);
   protected
@@ -343,6 +358,7 @@ type
     procedure LoadFromXML(XML: TLrXMLConfig; const Path: String); override;
     procedure SaveToXML(XML: TLrXMLConfig; const Path: String); override;
     procedure Assign(Source: TPersistent); override;
+    property Checked[AIndex: Integer]: Boolean read GetChecked write SetChecked;
   published
     property Color;
     property Enabled;
@@ -351,6 +367,7 @@ type
     property ItemsCount:integer read GetItemsCount;
     property Hint;
     property OnClick;
+    property PSOnClick;
   end;
 
   { TlrRadioGroup }
@@ -378,15 +395,18 @@ type
     property ItemsCount:integer read GetItemsCount;
     property Hint;
     property OnClick;
+    property PSOnClick;
     property Caption;
   end;
 
 procedure Register;
 
-procedure DoRegsiterControl(var cmpBMP:TBitmap; lrClass:TlrVisualControlClass);
+procedure DoRegsiterControl(var cmpBMP:TBitmap; lrClass:TlrVisualControlClass;
+  PSCompImportProc: TfrPSCompImport = nil; PSExecImportProc: TfrPSExecImport = nil);
 implementation
 
-uses typinfo, types, lrDBDialogControls, math, lrFormStorage;
+uses typinfo, types, lrDBDialogControls, math, lrFormStorage, uPSCompiler,
+  uPSRuntime, uPSUtils;
 
 {$R lrdialogcontrols_img.res}
 
@@ -408,60 +428,6 @@ var
   lrBMP_LRButtonPanel:TBitmap = nil;
   lrBMP_LRCheckListBox:TBitmap = nil;
   lrBMP_LRRadioGroupBox:TBitmap = nil;
-
-procedure DoRegsiterControl(var cmpBMP:TBitmap; lrClass:TlrVisualControlClass);
-begin
-  if not assigned(cmpBMP) then
-  begin
-    cmpBMP := TBitmap.Create;
-    cmpBMP.LoadFromResourceName(HInstance, lrClass.ClassName);
-    frRegisterObject(lrClass, cmpBMP, lrClass.ClassName, nil, otlUIControl, nil);
-  end;
-end;
-
-procedure InitLRComp;
-begin
-  DoRegsiterControl(lrBMP_LRLabel, TlrLabel);
-  DoRegsiterControl(lrBMP_LREdit, TlrEdit);
-  DoRegsiterControl(lrBMP_LRMemo, TlrMemo);
-  DoRegsiterControl(lrBMP_LRButton, TlrButton);
-  DoRegsiterControl(lrBMP_LRCheckBox, TlrCheckBox);
-  DoRegsiterControl(lrBMP_LRComboBox, TlrComboBox);
-  DoRegsiterControl(lrBMP_LRRadioButton, TlrRadioButton);
-  DoRegsiterControl(lrBMP_LRListBox, TlrListBox);
-  DoRegsiterControl(lrBMP_LRDateEdit, TlrDateEdit);
-  DoRegsiterControl(lrBMP_LRButtonPanel, TlrButtonPanel);
-  DoRegsiterControl(lrBMP_LRCheckListBox, TlrCheckListBox);
-  DoRegsiterControl(lrBMP_LRRadioGroupBox, TlrRadioGroup);
-end;
-
-procedure DoneLRComp;
-begin
-  if Assigned(lrBMP_LRLabel) then
-    FreeAndNil(lrBMP_LRLabel);
-  if Assigned(lrBMP_LREdit) then
-    FreeAndNil(lrBMP_LREdit);
-  if Assigned(lrBMP_LRButton) then
-    FreeAndNil(lrBMP_LRButton);
-  if Assigned(lrBMP_LRCheckBox) then
-    FreeAndNil(lrBMP_LRCheckBox);
-  if Assigned(lrBMP_LRComboBox) then
-    FreeAndNil(lrBMP_LRComboBox);
-  if Assigned(lrBMP_LRRadioButton) then
-    FreeAndNil(lrBMP_LRRadioButton);
-  if Assigned(lrBMP_LRMemo) then
-    FreeAndNil(lrBMP_LRMemo);
-  if Assigned(lrBMP_LRListBox) then
-    FreeAndNil(lrBMP_LRListBox);
-  if Assigned(lrBMP_LRDateEdit) then
-    FreeAndNil(lrBMP_LRDateEdit);
-  if Assigned(lrBMP_LRButtonPanel) then
-    FreeAndNil(lrBMP_LRButtonPanel);
-  if Assigned(lrBMP_LRCheckListBox) then
-    FreeAndNil(lrBMP_LRCheckListBox);
-  if Assigned(lrBMP_LRRadioGroupBox) then
-    FreeAndNil(lrBMP_LRRadioGroupBox);
-end;
 
 { TlrRadioGroup }
 
@@ -577,6 +543,11 @@ end;
 
 { TlrCheckListBox }
 
+function TlrCheckListBox.GetChecked(AIndex: Integer): Boolean;
+begin
+  Result := TCheckListBox(FControl).Checked[AIndex];
+end;
+
 function TlrCheckListBox.GetItemIndex: integer;
 begin
   Result:=TCheckListBox(FControl).ItemIndex;
@@ -590,6 +561,11 @@ end;
 function TlrCheckListBox.GetItemsCount: integer;
 begin
   Result:=TCheckListBox(FControl).Items.Count;
+end;
+
+procedure TlrCheckListBox.SetChecked(AIndex: Integer; AValue: Boolean);
+begin
+  TCheckListBox(FControl).Checked[AIndex] := AValue;
 end;
 
 procedure TlrCheckListBox.SetItemIndex(AValue: integer);
@@ -1491,23 +1467,28 @@ var
   FSavePage:TfrPage;
   CmdList, ErrorList:TStringList;
 begin
-  if (DocMode = dmPrinting) and (Script.Count>0) and (Trim(Script.Text)<>'') and (Assigned(CurReport))then
+  if (DocMode = dmPrinting) then
   begin
-    FSaveView:=CurView;
-    FSavePage:=CurPage;
-    CmdList:=TStringList.Create;
-    ErrorList:=TStringList.Create;
-    try
-      CurView := Self;
-      CurPage:=OwnerPage;
-      frInterpretator.PrepareScript(Script, CmdList, ErrorList);
-      frInterpretator.DoScript(CmdList);
-    finally
-      CurPage:=FSavePage;
-      CurView := FSaveView;
-      FreeAndNil(CmdList);
-      FreeAndNil(ErrorList);
+    if (Script.Count>0) and (Trim(Script.Text)<>'') and (Assigned(CurReport))then
+    begin
+      FSaveView:=CurView;
+      FSavePage:=CurPage;
+      CmdList:=TStringList.Create;
+      ErrorList:=TStringList.Create;
+      try
+        CurView := Self;
+        CurPage:=OwnerPage;
+        frInterpretator.PrepareScript(Script, CmdList, ErrorList);
+        frInterpretator.DoScript(CmdList);
+      finally
+        CurPage:=FSavePage;
+        CurView := FSaveView;
+        FreeAndNil(CmdList);
+        FreeAndNil(ErrorList);
+      end;
     end;
+    if (PSOnClick <> '') and Assigned(CurReport) then
+      PSExecOnClick(PSOnClick, Self);
   end;
 end;
 
@@ -1581,6 +1562,22 @@ begin
     FControl.OnClick:=@OnClickHandle;
 end;
 
+procedure TlrVisualControl.PSExecOnClick(ProcName: String;
+  VControl: TlrVisualControl);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  Arg: TPSVariantClass;
+begin
+  Proc := CurReport.PSScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  Arg.VI.FType := CurReport.PSScript.Exec.FindType2(btClass);
+  Arg.Data := VControl;
+  Params.Add(@Arg);
+  CurReport.PSScript.Exec.RunProc(Params, Proc);
+  Params.Free;
+end;
+
 constructor TlrVisualControl.Create(AOwnerPage: TfrPage);
 begin
   inherited Create(AOwnerPage);
@@ -1618,6 +1615,7 @@ begin
   begin
     OnClick.Text:=XML.GetValue(Path+'Event/OnClick/Value', '');
   end;
+  PSOnClick:=XML.GetValue(Path+'Event/PSOnClick/Value', '');
 end;
 
 procedure TlrVisualControl.SaveToXML(XML: TLrXMLConfig; const Path: String);
@@ -1639,8 +1637,731 @@ begin
     if IsPublishedProp(self,'OnClick') then
       XML.SetValue(Path+'Event/OnClick/Value', OnClick.Text);
   end;
+  if IsPublishedProp(self,'PSOnClick') then
+    XML.SetValue(Path+'Event/PSOnClick/Value', PSOnClick);
 end;
 
+(* === compile-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrRadioGroup(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrRadioGroup') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrRadioGroup') do
+  begin
+    RegisterProperty('Items', 'TStrings', iptrw);
+    RegisterProperty('ItemIndex', 'integer', iptrw);
+    RegisterProperty('ItemsCount', 'integer', iptr);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrCheckListBox(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrCheckListBox') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrCheckListBox') do
+  begin
+    RegisterProperty('Checked', 'Boolean Integer', iptrw);
+    RegisterProperty('Items', 'TStrings', iptrw);
+    RegisterProperty('ItemIndex', 'integer', iptrw);
+    RegisterProperty('ItemsCount', 'integer', iptr);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrButtonPanel(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrButtonPanel') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrButtonPanel') do
+  begin
+    RegisterProperty('ButtonOrder', 'TButtonOrder', iptrw);
+    RegisterProperty('ShowButtons', 'TPanelButtons', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrDateEdit(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrDateEdit') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrDateEdit') do
+  begin
+    RegisterProperty('Date', 'TDateTime', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrComboBox(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrComboBox') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrComboBox') do
+  begin
+    RegisterProperty('Style', 'TComboBoxStyle', iptrw);
+    RegisterProperty('Items', 'TStrings', iptrw);
+    RegisterProperty('ItemIndex', 'integer', iptrw);
+    RegisterProperty('DropDownCount', 'integer', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrListBox(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrListBox') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrListBox') do
+  begin
+    RegisterProperty('Items', 'TStrings', iptrw);
+    RegisterProperty('ItemIndex', 'integer', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrRadioButton(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrCheckBox', 'TlrRadioButton') do
+  with CL.AddClassN(CL.FindClass('TlrCheckBox'),'TlrRadioButton') do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrCheckBox(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrCheckBox') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrCheckBox') do
+  begin
+    RegisterProperty('Checked', 'boolean', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrButton(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrButton') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrButton') do
+  begin
+    RegisterProperty('Kind', 'TBitBtnKind', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrMemo(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrMemo') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrMemo') do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrEdit(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrEdit') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrEdit') do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrLabel(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TlrVisualControl', 'TlrLabel') do
+  with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrLabel') do
+  begin
+    RegisterProperty('Alignment', 'TAlignment', iptrw);
+    RegisterProperty('WordWrap', 'boolean', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TlrVisualControl(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TfrControl', 'TlrVisualControl') do
+  with CL.AddClassN(CL.FindClass('TfrControl'),'TlrVisualControl') do
+  begin
+    RegisterProperty('Control', 'TControl', iptrw);
+    RegisterProperty('AutoSize', 'Boolean', iptrw);
+    RegisterProperty('Color', 'TColor', iptrw);
+    RegisterProperty('Caption', 'string', iptrw);
+    RegisterProperty('Text', 'string', iptrw);
+    RegisterProperty('Font', 'TFont', iptrw);
+    RegisterProperty('Hint', 'string', iptrw);
+    RegisterProperty('OnClick', 'TfrScriptStrings', iptrw);
+    RegisterProperty('Enabled', 'boolean', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_LRDialogControls(CL: TPSPascalCompiler);
+begin
+  SIRegister_TlrVisualControl(CL);
+  //CL.AddTypeS('TlrVisualControlClass', 'class of TlrVisualControl');
+  SIRegister_TlrLabel(CL);
+  SIRegister_TlrEdit(CL);
+  SIRegister_TlrMemo(CL);
+  SIRegister_TlrButton(CL);
+  SIRegister_TlrCheckBox(CL);
+  SIRegister_TlrRadioButton(CL);
+  SIRegister_TlrListBox(CL);
+  SIRegister_TlrComboBox(CL);
+  SIRegister_TlrDateEdit(CL);
+  SIRegister_TlrButtonPanel(CL);
+  SIRegister_TlrCheckListBox(CL);
+  SIRegister_TlrRadioGroup(CL);
+end;
+
+(* === run-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure TlrRadioGroupItemsCount_R(Self: TlrRadioGroup; var T: integer);
+begin T := Self.ItemsCount; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrRadioGroupItemIndex_W(Self: TlrRadioGroup; const T: integer);
+begin Self.ItemIndex := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrRadioGroupItemIndex_R(Self: TlrRadioGroup; var T: integer);
+begin T := Self.ItemIndex; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrRadioGroupItems_W(Self: TlrRadioGroup; const T: TStrings);
+begin Self.Items := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrRadioGroupItems_R(Self: TlrRadioGroup; var T: TStrings);
+begin T := Self.Items; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxChecked_W(Self: TlrCheckListBox; const T: Boolean; const t1: Integer);
+begin Self.Checked[t1] := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxChecked_R(Self: TlrCheckListBox; var T: Boolean; const t1: Integer);
+begin T := Self.Checked[t1]; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxItemsCount_R(Self: TlrCheckListBox; var T: integer);
+begin T := Self.ItemsCount; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxItemIndex_W(Self: TlrCheckListBox; const T: integer);
+begin Self.ItemIndex := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxItemIndex_R(Self: TlrCheckListBox; var T: integer);
+begin T := Self.ItemIndex; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxItems_W(Self: TlrCheckListBox; const T: TStrings);
+begin Self.Items := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckListBoxItems_R(Self: TlrCheckListBox; var T: TStrings);
+begin T := Self.Items; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrButtonPanelShowButtons_W(Self: TlrButtonPanel; const T: TPanelButtons);
+begin Self.ShowButtons := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrButtonPanelShowButtons_R(Self: TlrButtonPanel; var T: TPanelButtons);
+begin T := Self.ShowButtons; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrButtonPanelButtonOrder_W(Self: TlrButtonPanel; const T: TButtonOrder);
+begin Self.ButtonOrder := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrButtonPanelButtonOrder_R(Self: TlrButtonPanel; var T: TButtonOrder);
+begin T := Self.ButtonOrder; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrDateEditDate_W(Self: TlrDateEdit; const T: TDateTime);
+begin Self.Date := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrDateEditDate_R(Self: TlrDateEdit; var T: TDateTime);
+begin T := Self.Date; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxDropDownCount_W(Self: TlrComboBox; const T: integer);
+begin Self.DropDownCount := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxDropDownCount_R(Self: TlrComboBox; var T: integer);
+begin T := Self.DropDownCount; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxItemIndex_W(Self: TlrComboBox; const T: integer);
+begin Self.ItemIndex := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxItemIndex_R(Self: TlrComboBox; var T: integer);
+begin T := Self.ItemIndex; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxItems_W(Self: TlrComboBox; const T: TStrings);
+begin Self.Items := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxItems_R(Self: TlrComboBox; var T: TStrings);
+begin T := Self.Items; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxStyle_W(Self: TlrComboBox; const T: TComboBoxStyle);
+begin Self.Style := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrComboBoxStyle_R(Self: TlrComboBox; var T: TComboBoxStyle);
+begin T := Self.Style; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrListBoxItemIndex_W(Self: TlrListBox; const T: integer);
+begin Self.ItemIndex := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrListBoxItemIndex_R(Self: TlrListBox; var T: integer);
+begin T := Self.ItemIndex; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrListBoxItems_W(Self: TlrListBox; const T: TStrings);
+begin Self.Items := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrListBoxItems_R(Self: TlrListBox; var T: TStrings);
+begin T := Self.Items; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckBoxChecked_W(Self: TlrCheckBox; const T: boolean);
+begin Self.Checked := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrCheckBoxChecked_R(Self: TlrCheckBox; var T: boolean);
+begin T := Self.Checked; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrButtonKind_W(Self: TlrButton; const T: TBitBtnKind);
+begin Self.Kind := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrButtonKind_R(Self: TlrButton; var T: TBitBtnKind);
+begin T := Self.Kind; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrLabelWordWrap_W(Self: TlrLabel; const T: boolean);
+begin Self.WordWrap := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrLabelWordWrap_R(Self: TlrLabel; var T: boolean);
+begin T := Self.WordWrap; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrLabelAlignment_W(Self: TlrLabel; const T: TAlignment);
+begin Self.Alignment := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrLabelAlignment_R(Self: TlrLabel; var T: TAlignment);
+begin T := Self.Alignment; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlEnabled_W(Self: TlrVisualControl; const T: boolean);
+begin Self.Enabled := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlEnabled_R(Self: TlrVisualControl; var T: boolean);
+begin T := Self.Enabled; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlOnClick_W(Self: TlrVisualControl; const T: TfrScriptStrings);
+begin Self.OnClick := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlOnClick_R(Self: TlrVisualControl; var T: TfrScriptStrings);
+begin T := Self.OnClick; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlHint_W(Self: TlrVisualControl; const T: string);
+begin Self.Hint := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlHint_R(Self: TlrVisualControl; var T: string);
+begin T := Self.Hint; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlFont_W(Self: TlrVisualControl; const T: TFont);
+begin Self.Font := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlFont_R(Self: TlrVisualControl; var T: TFont);
+begin T := Self.Font; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlText_W(Self: TlrVisualControl; const T: string);
+begin Self.Text := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlText_R(Self: TlrVisualControl; var T: string);
+begin T := Self.Text; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlCaption_W(Self: TlrVisualControl; const T: string);
+begin Self.Caption := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlCaption_R(Self: TlrVisualControl; var T: string);
+begin T := Self.Caption; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlColor_W(Self: TlrVisualControl; const T: TColor);
+begin Self.Color := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlColor_R(Self: TlrVisualControl; var T: TColor);
+begin T := Self.Color; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlAutoSize_W(Self: TlrVisualControl; const T: Boolean);
+begin Self.AutoSize := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlAutoSize_R(Self: TlrVisualControl; var T: Boolean);
+begin T := Self.AutoSize; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlControl_W(Self: TlrVisualControl; const T: TControl);
+begin Self.Control := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TlrVisualControlControl_R(Self: TlrVisualControl; var T: TControl);
+begin T := Self.Control; end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrRadioGroup(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrRadioGroup) do
+  begin
+    RegisterPropertyHelper(@TlrRadioGroupItems_R,@TlrRadioGroupItems_W,'Items');
+    RegisterPropertyHelper(@TlrRadioGroupItemIndex_R,@TlrRadioGroupItemIndex_W,'ItemIndex');
+    RegisterPropertyHelper(@TlrRadioGroupItemsCount_R,nil,'ItemsCount');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrCheckListBox(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrCheckListBox) do
+  begin
+    RegisterPropertyHelper(@TlrCheckListBoxChecked_R,@TlrCheckListBoxChecked_W,'Checked');
+    RegisterPropertyHelper(@TlrCheckListBoxItems_R,@TlrCheckListBoxItems_W,'Items');
+    RegisterPropertyHelper(@TlrCheckListBoxItemIndex_R,@TlrCheckListBoxItemIndex_W,'ItemIndex');
+    RegisterPropertyHelper(@TlrCheckListBoxItemsCount_R,nil,'ItemsCount');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrButtonPanel(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrButtonPanel) do
+  begin
+    RegisterPropertyHelper(@TlrButtonPanelButtonOrder_R,@TlrButtonPanelButtonOrder_W,'ButtonOrder');
+    RegisterPropertyHelper(@TlrButtonPanelShowButtons_R,@TlrButtonPanelShowButtons_W,'ShowButtons');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrDateEdit(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrDateEdit) do
+  begin
+    RegisterPropertyHelper(@TlrDateEditDate_R,@TlrDateEditDate_W,'Date');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrComboBox(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrComboBox) do
+  begin
+    RegisterPropertyHelper(@TlrComboBoxStyle_R,@TlrComboBoxStyle_W,'Style');
+    RegisterPropertyHelper(@TlrComboBoxItems_R,@TlrComboBoxItems_W,'Items');
+    RegisterPropertyHelper(@TlrComboBoxItemIndex_R,@TlrComboBoxItemIndex_W,'ItemIndex');
+    RegisterPropertyHelper(@TlrComboBoxDropDownCount_R,@TlrComboBoxDropDownCount_W,'DropDownCount');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrListBox(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrListBox) do
+  begin
+    RegisterPropertyHelper(@TlrListBoxItems_R,@TlrListBoxItems_W,'Items');
+    RegisterPropertyHelper(@TlrListBoxItemIndex_R,@TlrListBoxItemIndex_W,'ItemIndex');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrRadioButton(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrRadioButton) do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrCheckBox(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrCheckBox) do
+  begin
+    RegisterPropertyHelper(@TlrCheckBoxChecked_R,@TlrCheckBoxChecked_W,'Checked');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrButton(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrButton) do
+  begin
+    RegisterPropertyHelper(@TlrButtonKind_R,@TlrButtonKind_W,'Kind');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrMemo(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrMemo) do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrEdit(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrEdit) do
+  begin
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrLabel(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrLabel) do
+  begin
+    RegisterPropertyHelper(@TlrLabelAlignment_R,@TlrLabelAlignment_W,'Alignment');
+    RegisterPropertyHelper(@TlrLabelWordWrap_R,@TlrLabelWordWrap_W,'WordWrap');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TlrVisualControl(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TlrVisualControl) do
+  begin
+    RegisterPropertyHelper(@TlrVisualControlControl_R,@TlrVisualControlControl_W,'Control');
+    RegisterPropertyHelper(@TlrVisualControlAutoSize_R,@TlrVisualControlAutoSize_W,'AutoSize');
+    RegisterPropertyHelper(@TlrVisualControlColor_R,@TlrVisualControlColor_W,'Color');
+    RegisterPropertyHelper(@TlrVisualControlCaption_R,@TlrVisualControlCaption_W,'Caption');
+    RegisterPropertyHelper(@TlrVisualControlText_R,@TlrVisualControlText_W,'Text');
+    RegisterPropertyHelper(@TlrVisualControlFont_R,@TlrVisualControlFont_W,'Font');
+    RegisterPropertyHelper(@TlrVisualControlHint_R,@TlrVisualControlHint_W,'Hint');
+    RegisterPropertyHelper(@TlrVisualControlOnClick_R,@TlrVisualControlOnClick_W,'OnClick');
+    RegisterPropertyHelper(@TlrVisualControlEnabled_R,@TlrVisualControlEnabled_W,'Enabled');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_LRDialogControls(CL: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrVisualControl(CL);
+  RIRegister_TlrLabel(CL);
+  RIRegister_TlrEdit(CL);
+  RIRegister_TlrMemo(CL);
+  RIRegister_TlrButton(CL);
+  RIRegister_TlrCheckBox(CL);
+  RIRegister_TlrRadioButton(CL);
+  RIRegister_TlrListBox(CL);
+  RIRegister_TlrComboBox(CL);
+  RIRegister_TlrDateEdit(CL);
+  RIRegister_TlrButtonPanel(CL);
+  RIRegister_TlrCheckListBox(CL);
+  RIRegister_TlrRadioGroup(CL);
+end;
+
+(*----------------------------------------------------------------------------*)
+
+procedure PSCompImportDialogControlsTlrLabel(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrVisualControl(APSComp);
+  SIRegister_TlrLabel(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrEdit(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrEdit(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrMemo(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrMemo(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrButton(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrButton(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrCheckBox(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrCheckBox(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrRadioButton(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrRadioButton(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrListBox(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrListBox(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrComboBox(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrComboBox(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrDateEdit(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrDateEdit(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrButtonPanel(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrButtonPanel(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrCheckListBox(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrCheckListBox(APSComp);
+end;
+
+procedure PSCompImportDialogControlsTlrRadioGroup(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_TlrRadioGroup(APSComp);
+end;
+
+procedure PSExecImportDialogControlsTlrLabel(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrVisualControl(APSImporter);
+  RIRegister_TlrLabel(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrEdit(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrEdit(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrMemo(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrMemo(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrButton(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrButton(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrCheckBox(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrCheckBox(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrRadioButton(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrRadioButton(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrListBox(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrListBox(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrComboBox(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrComboBox(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrDateEdit(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrDateEdit(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrButtonPanel(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrButtonPanel(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrCheckListBox(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrCheckListBox(APSImporter);
+end;
+
+procedure PSExecImportDialogControlsTlrRadioGroup(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_TlrRadioGroup(APSImporter);
+end;
+
+procedure DoRegsiterControl(var cmpBMP:TBitmap; lrClass:TlrVisualControlClass;
+  PSCompImportProc: TfrPSCompImport; PSExecImportProc: TfrPSExecImport);
+begin
+  if not assigned(cmpBMP) then
+  begin
+    cmpBMP := TBitmap.Create;
+    cmpBMP.LoadFromResourceName(HInstance, lrClass.ClassName);
+    frRegisterObject(lrClass, cmpBMP, lrClass.ClassName, nil, otlUIControl, nil,
+      nil, PSCompImportProc, PSExecImportProc);
+  end;
+end;
+
+procedure InitLRComp;
+begin
+  DoRegsiterControl(lrBMP_LRLabel, TlrLabel, @PSCompImportDialogControlsTlrLabel, @PSExecImportDialogControlsTlrLabel);
+  DoRegsiterControl(lrBMP_LREdit, TlrEdit, @PSCompImportDialogControlsTlrEdit, @PSExecImportDialogControlsTlrEdit);
+  DoRegsiterControl(lrBMP_LRMemo, TlrMemo, @PSCompImportDialogControlsTlrMemo, @PSExecImportDialogControlsTlrMemo);
+  DoRegsiterControl(lrBMP_LRButton, TlrButton, @PSCompImportDialogControlsTlrButton, @PSExecImportDialogControlsTlrButton);
+  DoRegsiterControl(lrBMP_LRCheckBox, TlrCheckBox, @PSCompImportDialogControlsTlrCheckBox, @PSExecImportDialogControlsTlrCheckBox);
+  DoRegsiterControl(lrBMP_LRComboBox, TlrComboBox, @PSCompImportDialogControlsTlrComboBox, @PSExecImportDialogControlsTlrComboBox);
+  DoRegsiterControl(lrBMP_LRRadioButton, TlrRadioButton, @PSCompImportDialogControlsTlrRadioButton, @PSExecImportDialogControlsTlrRadioButton);
+  DoRegsiterControl(lrBMP_LRListBox, TlrListBox, @PSCompImportDialogControlsTlrListBox, @PSExecImportDialogControlsTlrListBox);
+  DoRegsiterControl(lrBMP_LRDateEdit, TlrDateEdit, @PSCompImportDialogControlsTlrDateEdit, @PSExecImportDialogControlsTlrDateEdit);
+  DoRegsiterControl(lrBMP_LRButtonPanel, TlrButtonPanel, @PSCompImportDialogControlsTlrButtonPanel, @PSExecImportDialogControlsTlrButtonPanel);
+  DoRegsiterControl(lrBMP_LRCheckListBox, TlrCheckListBox, @PSCompImportDialogControlsTlrCheckListBox, @PSExecImportDialogControlsTlrCheckListBox);
+  DoRegsiterControl(lrBMP_LRRadioGroupBox, TlrRadioGroup, @PSCompImportDialogControlsTlrRadioGroup, @PSExecImportDialogControlsTlrRadioGroup);
+end;
+
+procedure DoneLRComp;
+begin
+  if Assigned(lrBMP_LRLabel) then
+    FreeAndNil(lrBMP_LRLabel);
+  if Assigned(lrBMP_LREdit) then
+    FreeAndNil(lrBMP_LREdit);
+  if Assigned(lrBMP_LRButton) then
+    FreeAndNil(lrBMP_LRButton);
+  if Assigned(lrBMP_LRCheckBox) then
+    FreeAndNil(lrBMP_LRCheckBox);
+  if Assigned(lrBMP_LRComboBox) then
+    FreeAndNil(lrBMP_LRComboBox);
+  if Assigned(lrBMP_LRRadioButton) then
+    FreeAndNil(lrBMP_LRRadioButton);
+  if Assigned(lrBMP_LRMemo) then
+    FreeAndNil(lrBMP_LRMemo);
+  if Assigned(lrBMP_LRListBox) then
+    FreeAndNil(lrBMP_LRListBox);
+  if Assigned(lrBMP_LRDateEdit) then
+    FreeAndNil(lrBMP_LRDateEdit);
+  if Assigned(lrBMP_LRButtonPanel) then
+    FreeAndNil(lrBMP_LRButtonPanel);
+  if Assigned(lrBMP_LRCheckListBox) then
+    FreeAndNil(lrBMP_LRCheckListBox);
+  if Assigned(lrBMP_LRRadioGroupBox) then
+    FreeAndNil(lrBMP_LRRadioGroupBox);
+end;
 
 initialization
   InitLRComp;

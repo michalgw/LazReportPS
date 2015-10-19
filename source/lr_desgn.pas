@@ -24,9 +24,11 @@ uses
 
   LCLType,LCLIntf,LCLProc,GraphType,Printers, ActnList,
 
-  ObjectInspector, PropEdits,
+  ObjectInspector, PropEdits, SynEdit, SynHighlighterPas, SynEditMarks,
+
+  uPSComponent,
   
-  LR_Class, LR_Color,LR_Edit;
+  LR_Class, LR_Color,LR_Edit, SynGutterBase;
 
 
 const
@@ -241,13 +243,92 @@ type
     procedure Paint;
   end;
 
+  { TfrReportObject }
+
+  TfrReportObject = class(TfrObject)
+  private
+    function GetPSOnBeginBand: String;
+    function GetPSOnBeginColumn: String;
+    function GetPSOnEndBand: String;
+    function GetPSOnEnterRect: String;
+    function GetPSOnExec: String;
+    function GetPSOnGetValue: String;
+    function GetPSOnInit: String;
+    function GetPSOnMouseOverObject: String;
+    function GetPSOnObjectClick: String;
+    function GetPSOnPrintColumn: String;
+    function GetPSOnUserFunction: String;
+    procedure SetPSOnBeginBand(AValue: String);
+    procedure SetPSOnBeginColumn(AValue: String);
+    procedure SetPSOnEndBand(AValue: String);
+    procedure SetPSOnEnterRect(AValue: String);
+    procedure SetPSOnExec(AValue: String);
+    procedure SetPSOnGetValue(AValue: String);
+    procedure SetPSOnInit(AValue: String);
+    procedure SetPSOnMouseOverObject(AValue: String);
+    procedure SetPSOnObjectClick(AValue: String);
+    procedure SetPSOnPrintColumn(AValue: String);
+    procedure SetPSOnUserFunction(AValue: String);
+  public
+    Report: TfrReport;
+  published
+    property PSOnExec: String read GetPSOnExec write SetPSOnExec;
+    property PSOnInit: String read GetPSOnInit write SetPSOnInit;
+    property PSOnBeginBand: String read GetPSOnBeginBand write SetPSOnBeginBand;
+    property PSOnEndBand: String read GetPSOnEndBand write SetPSOnEndBand;
+    property PSOnBeginColumn: String read GetPSOnBeginColumn write SetPSOnBeginColumn;
+    property PSOnEnterRect: String read GetPSOnEnterRect write SetPSOnEnterRect;
+    property PSOnPrintColumn: String read GetPSOnPrintColumn write SetPSOnPrintColumn;
+    property PSOnMouseOverObject: String read GetPSOnMouseOverObject write SetPSOnMouseOverObject;
+    property PSOnObjectClick: String read GetPSOnObjectClick write SetPSOnObjectClick;
+    property PSOnGetValue: String read GetPSOnGetValue write SetPSOnGetValue;
+    property PSOnUserFunction: String read GetPSOnUserFunction write SetPSOnUserFunction;
+  end;
+
   { TfrDesignerForm }
 
   TfrDesignerForm = class(TfrReportDesigner)
     acDuplicate: TAction;
+    ActPSClrBrkpt: TAction;
+    ActPSClrMsg: TAction;
+    ActPSEval: TAction;
+    ActPSStop: TAction;
+    ActPSPause: TAction;
+    ActPSBrkpt: TAction;
+    ActPSStepOver: TAction;
+    ActPSStepInto: TAction;
+    ActPSRun: TAction;
+    ActPSCompile: TAction;
     edtRedo: TAction;
     edtUndo: TAction;
+    ImageListSynPS: TImageList;
+    ListBoxBrkpt: TListBox;
+    ListBoxPSMsg: TListBox;
+    MenuItem10: TMenuItem;
+    MenuItem11: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
+    MenuItemCompile: TMenuItem;
+    MenuItemRun: TMenuItem;
+    PageControl1: TPageControl;
+    panForPS: TPanel;
+    PascalScriptMenu: TMenuItem;
+    OB8: TSpeedButton;
+    panTabPS: TPanel;
+    PopupMenuBrkpt: TPopupMenu;
+    PopupMenuMsg: TPopupMenu;
+    Splitter1: TSplitter;
+    SynEditPS: TSynEdit;
+    SynPasSyn1: TSynPasSyn;
+    TabSheetPSBkpt: TTabSheet;
+    TabSheetPSMsg: TTabSheet;
+    tbPSCompile: TToolButton;
     tlsDBFields: TAction;
     FileBeforePrintScript: TAction;
     FileOpen: TAction;
@@ -286,6 +367,17 @@ type
     MainMenu1: TMainMenu;
     FileMenu: TMenuItem;
     EditMenu: TMenuItem;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton10: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
+    ToolButton5: TToolButton;
+    ToolButton6: TToolButton;
+    ToolButton7: TToolButton;
+    ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
     ToolMenu: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
@@ -432,6 +524,16 @@ type
     StB1: TSpeedButton;
     procedure acDuplicateExecute(Sender: TObject);
     procedure acToggleFramesExecute(Sender: TObject);
+    procedure ActPSBrkptExecute(Sender: TObject);
+    procedure ActPSClrBrkptExecute(Sender: TObject);
+    procedure ActPSClrMsgExecute(Sender: TObject);
+    procedure ActPSCompileExecute(Sender: TObject);
+    procedure ActPSEvalExecute(Sender: TObject);
+    procedure ActPSPauseExecute(Sender: TObject);
+    procedure ActPSRunExecute(Sender: TObject);
+    procedure ActPSStepIntoExecute(Sender: TObject);
+    procedure ActPSStepOverExecute(Sender: TObject);
+    procedure ActPSStopExecute(Sender: TObject);
     procedure C2GetItems(Sender: TObject);
     procedure edtRedoExecute(Sender: TObject);
     procedure edtUndoExecute(Sender: TObject);
@@ -446,9 +548,14 @@ type
     procedure DoClick(Sender: TObject);
     procedure ClB1Click(Sender: TObject);
     procedure GB1Click(Sender: TObject);
+    procedure ListBoxBrkptDblClick(Sender: TObject);
+    procedure ListBoxPSMsgDblClick(Sender: TObject);
     procedure ScrollBox1DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure ScrollBox1DragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
+    procedure SynEditPSChange(Sender: TObject);
+    procedure SynEditPSGutterClick(Sender: TObject; X, Y, Line: integer;
+      mark: TSynEditMark);
     procedure tlsDBFieldsExecute(Sender: TObject);
     procedure ZB1Click(Sender: TObject);
     procedure ZB2Click(Sender: TObject);
@@ -537,6 +644,8 @@ type
     FCurDocName, FCaption: String;
     fCurDocFileType: Integer;
     ShapeMode: TfrShapeMode;
+
+    FReportObj: TfrReportObject;
     
     {$IFDEF StdOI}
     ObjInsp  : TObjectInspector;
@@ -616,6 +725,7 @@ type
     procedure SelectSameClassClick(Sender: TObject);
     procedure SelectSameClass(View: TfrView);
     function CheckFileModified: Integer;
+    procedure UpdatePascalScript;
   private
     FDuplicateCount: Integer;
     FDupDeltaX,FDupDeltaY: Integer;
@@ -634,6 +744,18 @@ type
     procedure TabsEditMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure TabsEditMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure TabsEditMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  private
+    FCurrentPS: TPSScriptDebugger;
+    FResume: Boolean;
+    FIsDebug: Boolean;
+    procedure PSCompile(Sender: TfrReport; Success: Boolean);
+    procedure PSIdle(Sender: TObject);
+    procedure PSLineInfo(Sender: TObject; const FileName: String; APosition, Row, Col: Cardinal);
+    procedure PSBreakpoint(Sender: TObject; const FileName: String; APosition, Row, Col: Cardinal);
+    procedure PSExecute(Sender: TPSScript);
+    procedure DoPreview(AMode: Integer); // 1 - preview, 2 - compile, 3 - debug
+    procedure SetPSActions(AMode: Integer); // 1 - normal, 2 - run report, 3 - run pascalscript, 4 - pause pascal script
+    procedure SetDlgPgEnabled(AEnabled: Boolean);
   protected
     procedure SetModified(AValue: Boolean);override;
     function IniFileName:string;
@@ -656,7 +778,11 @@ type
     function UnitsToPoints(x: Double): Integer;  override;
     procedure MoveObjects(dx, dy: Integer; aResize: Boolean);
     procedure UpdateStatus;
-
+    procedure ClearMessages;
+    procedure AddBreakpoint(LineNo: Integer);
+    procedure RemoveBreakpoint(LineNo: Integer);
+    function HasBreakpoint(LineNo: Integer): Boolean;
+    procedure TogleBreakpoint(LineNo: Integer);
     property CurDocName: String read FCurDocName write SetCurDocName;
     property CurPage: Integer read FCurPage write SetCurPage;
     property GridSize: Integer read FGridSize write SetGridSize;
@@ -684,10 +810,14 @@ uses
   LR_Pgopt, LR_GEdit, LR_Templ, LR_Newrp, LR_DsOpt, LR_Const, LR_Pars,
   LR_Prntr, LR_Hilit, LR_Flds, LR_Dopt, LR_Ev_ed, LR_BndEd, LR_VBnd,
   LR_BTyp, LR_Utils, LR_GrpEd, LR_About, LR_IFlds, LR_DBRel,LR_DBSet,
-  DB, lr_design_ins_filed, IniFiles;
+  DB, lr_design_ins_filed, IniFiles, uPSRuntime, uPSDebugger, LR_progr;
 
 type
   THackView = class(TfrView)
+  end;
+
+  TCompLineInfo = class
+    Line, Col: Integer;
   end;
 
 function GetUnusedBand: TfrBandType; forward;
@@ -730,6 +860,15 @@ var
 
   frDesignerComp     : TfrDesigner;
 
+const
+  DP_PREVIEW = 1;
+  DP_COMPILE = 2;
+  DP_DEBUG = 3;
+
+  PA_NORMAL = 1;
+  PA_RUN_REP = 2;
+  PA_RUN_SCR = 3;
+  PA_PAUSE = 4;
 
 {----------------------------------------------------------------------------}
 procedure AddRgn(var HR: HRGN; T: TfrView);
@@ -739,6 +878,162 @@ begin
   tr := t.GetClipRgn(rtExtended);
   CombineRgn(HR, HR, TR, RGN_OR);
   DeleteObject(TR);
+end;
+
+{ TfrReportObject }
+
+function TfrReportObject.GetPSOnBeginBand: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnBeginBand
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnBeginColumn: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnBeginColumn
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnEndBand: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnEndBand
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnEnterRect: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnEnterRect
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnExec: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnExec
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnGetValue: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnGetValue
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnInit: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnInit
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnMouseOverObject: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnMouseOverObject
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnObjectClick: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnObjectClick
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnPrintColumn: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnPrintColumn
+  else
+    Result := '';
+end;
+
+function TfrReportObject.GetPSOnUserFunction: String;
+begin
+  if Assigned(CurReport) then
+    Result := CurReport.PSOnUserFunction
+  else
+    Result := '';
+end;
+
+procedure TfrReportObject.SetPSOnBeginBand(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnBeginBand := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnBeginColumn(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnBeginColumn := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnEndBand(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnEndBand := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnEnterRect(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnEnterRect := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnExec(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnExec := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnGetValue(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnGetValue := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnInit(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnInit := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnMouseOverObject(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnMouseOverObject := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnObjectClick(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnObjectClick := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnPrintColumn(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnPrintColumn := AValue;
+end;
+
+procedure TfrReportObject.SetPSOnUserFunction(AValue: String);
+begin
+  if Assigned(CurReport) then
+    CurReport.PSOnUserFunction := AValue;
 end;
 
 { TPaintSel }
@@ -2923,6 +3218,9 @@ begin
   FTabsPage.OnMouseDown:=@TabsEditMouseDown;
   FTabsPage.OnMouseMove:=@TabsEditMouseMove;
   FTabsPage.OnMouseUp:=@TabsEditMouseUp;
+
+  FReportObj := TfrReportObject.Create(nil);
+  FReportObj.Name := 'Report';
 end;
 
 destructor TfrDesignerForm.Destroy;
@@ -2933,6 +3231,7 @@ begin
   {$IFDEF STDOI}
   PropHook.Free;
   {$ENDIF}
+  FReportObj.Free;
   inherited Destroy;
 end;
 
@@ -3277,6 +3576,8 @@ begin
           raise Exception.Create('Unrecognized file format');
       end;
       //FileModified := False;
+      SynEditPS.Lines.Assign(CurReport.PasScript);
+      SynEditPS.Modified := False;
       Modified := False;
       CurPage := 0; // do all
     end;
@@ -3284,75 +3585,8 @@ begin
 end;
 
 procedure TfrDesignerForm.FilePreviewExecute(Sender: TObject); // preview
-var
-  TestRepStream:TMemoryStream;
-  Rep, SaveR:TfrReport;
-
-procedure DoClearFormsName;
-var
-  i:integer;
 begin
-  for i:=0 to CurReport.Pages.Count - 1 do
-    if CurReport.Pages[i] is TfrPageDialog then
-      TfrPageDialog(CurReport.Pages[i]).Form.Name:='';
-end;
-
-procedure DoResoreFormsName;
-var
-  i:integer;
-begin
-  for i:=0 to CurReport.Pages.Count - 1 do
-    if CurReport.Pages[i] is TfrPageDialog then
-      TfrPageDialog(CurReport.Pages[i]).Form.Name:=TfrPageDialog(CurReport.Pages[i]).Name;
-end;
-begin
-  if CurReport is TfrCompositeReport then Exit;
-  Application.ProcessMessages;
-  SaveR:=CurReport;
-  TestRepStream:=TMemoryStream.Create;
-  CurReport.SaveToXMLStream(TestRepStream);
-  TestRepStream.Position:=0;
-
-//  DoClearFormsName;
-  CurReport:=nil;
-
-  Rep:=TfrReport.Create(SaveR.Owner);
-
-  Rep.OnBeginBand:=SaveR.OnBeginBand;
-  Rep.OnBeginColumn:=SaveR.OnBeginColumn;
-  Rep.OnBeginDoc:=SaveR.OnBeginDoc;
-  Rep.OnBeginPage:=SaveR.OnBeginPage;
-  Rep.OnDBImageRead:=SaveR.OnDBImageRead;
-  Rep.OnEndBand:=SaveR.OnEndBand;
-  Rep.OnEndDoc:=SaveR.OnEndDoc;
-  Rep.OnEndPage:=SaveR.OnEndPage;
-  Rep.OnEnterRect:=SaveR.OnEnterRect;
-  Rep.OnExportFilterSetup:=SaveR.OnExportFilterSetup;
-  Rep.OnGetValue:=SaveR.OnGetValue;
-  Rep.OnManualBuild:=SaveR.OnManualBuild;
-  Rep.OnMouseOverObject:=SaveR.OnMouseOverObject;
-  Rep.OnObjectClick:=SaveR.OnObjectClick;
-  Rep.OnPrintColumn:=SaveR.OnPrintColumn;
-  Rep.OnProgress:=SaveR.OnProgress;
-  Rep.OnUserFunction:=SaveR.OnUserFunction;
-
-  try
-    Rep.LoadFromXMLStream(TestRepStream);
-    Rep.FileName:=SaveR.FileName;
-    Rep.ShowReport;
-    FreeAndNil(Rep)
-  except
-    on E:Exception do
-    begin
-      ShowMessage(E.Message);
-      if Assigned(Rep) then
-        FreeAndNil(Rep)
-    end;
-  end;
-  TestRepStream.Free;
-  CurReport:=SaveR;
-  CurPage := 0;
-//  DoResoreFormsName;
+  DoPreview(DP_PREVIEW);
 end;
 
 procedure TfrDesignerForm.FileSaveAsExecute(Sender: TObject);
@@ -3360,6 +3594,7 @@ var
   s: String;
 begin
   WasOk := False;
+  UpdatePascalScript;
   if Assigned(frDesignerComp) and Assigned(frDesignerComp.FOnSaveReport) then
   begin
     S:='';
@@ -3368,6 +3603,7 @@ begin
     begin
       CurDocName:=S;
       Modified:=false;
+      SynEditPS.Modified := False;
     end;
   end
   else
@@ -3437,6 +3673,7 @@ var
   S:string;
   F:boolean;
 begin
+  UpdatePascalScript;
   if CurDocName <> sUntitled then
   begin
     if Assigned(frDesignerComp) and Assigned(frDesignerComp.FOnSaveReport) then
@@ -3448,6 +3685,7 @@ begin
       begin
         CurDocName:=S;
         Modified := False;
+        SynEditPS.Modified := False;
       end;
     end
     else
@@ -3457,6 +3695,7 @@ begin
       else
         CurReport.SaveToFile(CurDocName);
       Modified := False;
+      SynEditPS.Modified := False;
     end;
   end
   else
@@ -3472,6 +3711,101 @@ procedure TfrDesignerForm.acToggleFramesExecute(Sender: TObject);
 begin
   if DelEnabled then
     ViewsAction(nil, @ToggleFrames, -1);
+end;
+
+procedure TfrDesignerForm.ActPSBrkptExecute(Sender: TObject);
+begin
+  TogleBreakpoint(SynEditPS.CaretY);
+end;
+
+procedure TfrDesignerForm.ActPSClrBrkptExecute(Sender: TObject);
+var
+  I: Integer;
+begin
+  if FIsDebug and (FCurrentPS <> nil) then
+    while ListBoxBrkpt.Count > 0 do
+    begin
+      FCurrentPS.ClearBreakPoint('', Integer(ListBoxBrkpt.Items.Objects[0]));
+      ListBoxBrkpt.Items.Delete(0);
+    end
+  else
+    ListBoxBrkpt.Clear;
+  for I := SynEditPS.Marks.Count - 1 downto 0 do
+    if SynEditPS.Marks.Items[I].ImageIndex = 0 then
+    begin
+      SynEditPS.Marks.Items[I].Free;
+      //SynEditPS.Marks.Delete(I);
+    end;
+end;
+
+procedure TfrDesignerForm.ActPSClrMsgExecute(Sender: TObject);
+begin
+  ClearMessages;
+end;
+
+procedure TfrDesignerForm.ActPSCompileExecute(Sender: TObject);
+begin
+  DoPreview(DP_COMPILE);
+end;
+
+procedure TfrDesignerForm.ActPSEvalExecute(Sender: TObject);
+var
+  S: String;
+begin
+  if FIsDebug and (FCurrentPS <> nil) and (FCurrentPS.Exec.Status in [isRunning, isPaused]) then
+  begin
+    S := InputBox('Evaluate variable', 'Enter variable name', '');
+    if S <> '' then
+      MessageDlg('Value of "' + S + '"', FCurrentPS.GetVarContents(S), mtInformation, [mbOK], 0);
+  end;
+end;
+
+procedure TfrDesignerForm.ActPSPauseExecute(Sender: TObject);
+begin
+  if FIsDebug and (FCurrentPS <> nil) and (FCurrentPS.Exec.Status = isRunning) then
+    FCurrentPS.Pause;
+end;
+
+procedure TfrDesignerForm.ActPSRunExecute(Sender: TObject);
+begin
+  if not FIsDebug then
+    DoPreview(DP_DEBUG)
+  else
+  if (FCurrentPS <> nil) and (FCurrentPS.Exec.Status in [isRunning, isPaused]) then
+  begin
+    SetDlgPgEnabled(True);
+    FResume := True;
+    FCurrentPS.Resume;
+  end;
+end;
+
+procedure TfrDesignerForm.ActPSStepIntoExecute(Sender: TObject);
+begin
+  if FIsDebug and (FCurrentPS <> nil) and (FCurrentPS.Exec.Status in [isPaused, isRunning]) then
+  begin
+    SetDlgPgEnabled(True);
+    FResume := True;
+    FCurrentPS.StepInto;
+  end;
+end;
+
+procedure TfrDesignerForm.ActPSStepOverExecute(Sender: TObject);
+begin
+  if FIsDebug and (FCurrentPS <> nil) and (FCurrentPS.Exec.Status in [isPaused, isRunning]) then
+  begin
+    SetDlgPgEnabled(True);
+    FResume := True;
+    FCurrentPS.StepOver;
+  end;
+end;
+
+procedure TfrDesignerForm.ActPSStopExecute(Sender: TObject);
+begin
+  if FIsDebug and (FCurrentPS <> nil) and (FCurrentPS.Exec.Status in [isRunning, isPaused]) then
+  begin
+    CurReport.Terminated := True;
+    FCurrentPS.Stop;
+  end;
 end;
 
 procedure TfrDesignerForm.FormShow(Sender: TObject);
@@ -3533,8 +3867,14 @@ begin
 
   LinePanel.Hide;
 
+  SynEditPS.Lines.Assign(CurReport.PasScript);
+  SynEditPS.Modified := False;
+
   ShowPosition;
   RestoreState;
+
+  SetPSActions(PA_NORMAL);
+
   FormResize(nil);
 end;
 
@@ -3545,7 +3885,10 @@ begin
   SaveState;
 
   if CurReport<>nil then
+  begin
     CurReport.FileName := CurDocName;
+    CurReport.PasScript.Assign(SynEditPS.Lines);
+  end;
 end;
 
 procedure TfrDesignerForm.FormDestroy(Sender: TObject);
@@ -3559,6 +3902,7 @@ begin
   PageView.Free;
   ColorSelector.Free;
   EditorForm.Free;
+  ClearMessages;
 end;
 
 procedure TfrDesignerForm.FormResize(Sender: TObject);
@@ -3608,7 +3952,14 @@ begin // setting curpage and do all manipulation
     ScrollBox1.HorzScrollBar.Position := 0;
     PageView.SetPage;
     SetPageTitles;
-    Tab1.TabIndex := Value;
+    if Tab1.TabIndex = 0 then
+    begin
+      panTabPS.Visible := False;
+      panTab.Visible := True;
+      panForPS.Visible := False;
+      frDock4.Visible := True;
+    end;
+    Tab1.TabIndex := Value + 1;
     ResetSelection;
     SendBandsToDown;
     PageView.Invalidate;
@@ -3822,7 +4173,7 @@ begin
         begin
           AdjustSubReports(Pages[n]);
           CurReport.Pages.Delete(n);
-          Tab1.Tabs.Delete(n);
+          Tab1.Tabs.Delete(n + 1);
           Tab1.TabIndex := 0;
           CurPage := 0;
         end;
@@ -3859,19 +4210,20 @@ begin
 end;
   
 begin
-  if Tab1.Tabs.Count = CurReport.Pages.Count then
+  if Tab1.Tabs.Count - 1 = CurReport.Pages.Count then
   begin
-   for i := 0 to Tab1.Tabs.Count - 1 do
+   for i := 0 to Tab1.Tabs.Count - 2 do
    begin
      if not IsSubreport(i) then
        s := sPg + IntToStr(i + 1);
-     if Tab1.Tabs[i] <> s then
-       Tab1.Tabs[i] := s;
+     if Tab1.Tabs[i + 1] <> s then
+       Tab1.Tabs[i + 1] := s;
    end;
   end
   else
   begin
     Tab1.Tabs.Clear;
+    Tab1.Tabs.Add('PascalScript');
     for i := 0 to CurReport.Pages.Count - 1 do
     begin
       if not IsSubreport(i) then
@@ -4001,6 +4353,8 @@ begin
   if (ActiveControl<>nil) and (ActiveControl.Parent=ObjInsp.fPropertyGrid) then
     exit;
   {$ENDIF}
+  if Tab1.TabIndex = 0 then
+    Exit;
   StepX := 0; StepY := 0;
   if (Key=VK_F11) then
     ObjInsp.Visible:=not ObjInsp.Visible;
@@ -4181,6 +4535,75 @@ begin
   {$else}
   PBox1Paint(nil);
   {$endif}
+end;
+
+procedure TfrDesignerForm.ClearMessages;
+var
+  I: Integer;
+begin
+  for I := 0 to ListBoxPSMsg.Items.Count - 1 do
+    if Assigned(ListBoxPSMsg.Items.Objects[I]) then
+      TCompLineInfo(ListBoxPSMsg.Items.Objects[I]).Free;
+end;
+
+procedure TfrDesignerForm.AddBreakpoint(LineNo: Integer);
+var
+  I: Integer;
+  M: TSynEditMark;
+begin
+  for I := 0 to ListBoxBrkpt.Count - 1 do
+    if Integer(ListBoxBrkpt.Items.Objects[I]) = LineNo then
+      Exit;
+  ListBoxBrkpt.AddItem(Format('Line number %d', [LineNo]), TObject(LineNo));
+  M := TSynEditMark.Create(SynEditPS);
+  M.Line := LineNo;
+  M.ImageList := ImageListSynPS;
+  M.ImageIndex := 0;
+  M.Visible := True;
+  SynEditPS.Marks.Add(M);
+  if FCurrentPS <> nil then
+    FCurrentPS.SetBreakPoint('', LineNo);
+end;
+
+procedure TfrDesignerForm.RemoveBreakpoint(LineNo: Integer);
+var
+  I, J: Integer;
+begin
+  for I := 0 to ListBoxBrkpt.Count - 1 do
+    if Integer(ListBoxBrkpt.Items.Objects[I]) = LineNo then
+    begin
+      ListBoxBrkpt.Items.Delete(I);
+      if FCurrentPS <> nil then
+        FCurrentPS.ClearBreakPoint('', LineNo);
+      for J := SynEditPS.Marks.Line[LineNo].Count - 1 downto 0 do
+        if SynEditPS.Marks.Line[LineNo].Items[J].ImageIndex = 0 then
+        begin
+          SynEditPS.Marks.Line[LineNo].Items[J].Free;
+          //SynEditPS.Marks.Line[LineNo].Delete(J);
+        end;
+      Exit;
+    end;
+end;
+
+function TfrDesignerForm.HasBreakpoint(LineNo: Integer): Boolean;
+var
+  I: Integer;
+begin
+  Result := False;
+  for I := 0 to ListBoxBrkpt.Count - 1 do
+    if Integer(ListBoxBrkpt.Items.Objects[I]) = LineNo then
+    begin
+      Result := True;
+      Exit;
+    end;
+end;
+
+procedure TfrDesignerForm.TogleBreakpoint(LineNo: Integer);
+begin
+  if HasBreakpoint(LineNo) then
+    RemoveBreakpoint(LineNo)
+  else
+    AddBreakpoint(LineNo);
 end;
 
 procedure TfrDesignerForm.DeleteObjects;
@@ -4388,6 +4811,12 @@ begin
   end;
 end;
 
+procedure TfrDesignerForm.UpdatePascalScript;
+begin
+  if Assigned(CurReport) then
+    CurReport.PasScript.Assign(SynEditPS.Lines);
+end;
+
 // if AList is specified always process the list being objects selected or not
 // if AList is not specified, all objects are processed but check Selected state
 procedure TfrDesignerForm.ViewsAction(Views: TFpList; TheAction: TViewAction;
@@ -4534,6 +4963,223 @@ procedure TfrDesignerForm.TabsEditMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   FTabMouseDown:=false;
+end;
+
+procedure TfrDesignerForm.PSCompile(Sender: TfrReport; Success: Boolean);
+var
+  I: Integer;
+  LI: TCompLineInfo;
+begin
+  ClearMessages;
+  ListBoxPSMsg.Clear;
+  for I := 0 to Sender.PSScript.CompilerMessageCount - 1 do
+  begin
+    LI := TCompLineInfo.Create;
+    LI.Line := Sender.PSScript.CompilerMessages[I].Row;
+    LI.Col := Sender.PSScript.CompilerMessages[I].Col;
+    ListBoxPSMsg.Items.AddObject(Sender.PSScript.CompilerMessages[I].MessageToString, LI);
+  end;
+  if Success then
+    ListBoxPSMsg.Items.Add('Success.');
+end;
+
+procedure TfrDesignerForm.PSIdle(Sender: TObject);
+begin
+  Application.ProcessMessages;
+  if FResume then
+  begin
+    SetPSActions(PA_PAUSE);
+    SetDlgPgEnabled(False);
+    FResume := False;
+  end;
+end;
+
+procedure TfrDesignerForm.PSLineInfo(Sender: TObject; const FileName: String;
+  APosition, Row, Col: Cardinal);
+begin
+  if (FCurrentPS <> nil) and (FCurrentPS.Exec.DebugMode <> dmRun) and (FCurrentPS.Exec.DebugMode <> dmStepOver) then
+  begin
+    SynEditPS.CaretX := Col;
+    SynEditPS.CaretY := Row;
+    SynEditPS.Refresh;
+  end;
+end;
+
+procedure TfrDesignerForm.PSBreakpoint(Sender: TObject; const FileName: String;
+  APosition, Row, Col: Cardinal);
+begin
+  SynEditPS.CaretY := Row;
+  SynEditPS.CaretX := Col;
+  SetPSActions(PA_PAUSE);
+  SetDlgPgEnabled(False);
+  SynEditPS.Refresh;
+  SynEditPS.SetFocus;
+end;
+
+procedure TfrDesignerForm.PSExecute(Sender: TPSScript);
+begin
+  if FIsDebug then
+  begin
+    SetPSActions(PA_RUN_SCR);
+  end;
+
+  FResume := True;
+end;
+
+procedure TfrDesignerForm.DoPreview(AMode: Integer);
+var
+  TestRepStream:TMemoryStream;
+  Rep, SaveR:TfrReport;
+  I: Integer;
+
+{procedure DoClearFormsName;
+var
+  i:integer;
+begin
+  for i:=0 to CurReport.Pages.Count - 1 do
+    if CurReport.Pages[i] is TfrPageDialog then
+      TfrPageDialog(CurReport.Pages[i]).Form.Name:='';
+end;
+
+procedure DoResoreFormsName;
+var
+  i:integer;
+begin
+  for i:=0 to CurReport.Pages.Count - 1 do
+    if CurReport.Pages[i] is TfrPageDialog then
+      TfrPageDialog(CurReport.Pages[i]).Form.Name:=TfrPageDialog(CurReport.Pages[i]).Name;
+end;}
+begin
+  if CurReport is TfrCompositeReport then Exit;
+  Application.ProcessMessages;
+  UpdatePascalScript;
+  SaveR:=CurReport;
+  TestRepStream:=TMemoryStream.Create;
+  CurReport.SaveToXMLStream(TestRepStream);
+  TestRepStream.Position:=0;
+
+//  DoClearFormsName;
+  CurReport:=nil;
+
+  Rep:=TfrReport.Create(SaveR.Owner);
+
+  Rep.OnBeginBand:=SaveR.OnBeginBand;
+  Rep.OnBeginColumn:=SaveR.OnBeginColumn;
+  Rep.OnBeginDoc:=SaveR.OnBeginDoc;
+  Rep.OnBeginPage:=SaveR.OnBeginPage;
+  Rep.OnDBImageRead:=SaveR.OnDBImageRead;
+  Rep.OnEndBand:=SaveR.OnEndBand;
+  Rep.OnEndDoc:=SaveR.OnEndDoc;
+  Rep.OnEndPage:=SaveR.OnEndPage;
+  Rep.OnEnterRect:=SaveR.OnEnterRect;
+  Rep.OnExportFilterSetup:=SaveR.OnExportFilterSetup;
+  Rep.OnGetValue:=SaveR.OnGetValue;
+  Rep.OnManualBuild:=SaveR.OnManualBuild;
+  Rep.OnMouseOverObject:=SaveR.OnMouseOverObject;
+  Rep.OnObjectClick:=SaveR.OnObjectClick;
+  Rep.OnPrintColumn:=SaveR.OnPrintColumn;
+  Rep.OnProgress:=SaveR.OnProgress;
+  Rep.OnUserFunction:=SaveR.OnUserFunction;
+
+  Rep.AfterCompile := @PSCompile;
+
+  if AMode = DP_DEBUG then
+  begin
+    Rep.PSScript.OnLineInfo := @PSLineInfo;
+    Rep.PSScript.OnIdle := @PSIdle;
+    Rep.PSScript.OnBreakpoint := @PSBreakpoint;
+    Rep.OnExecute := @PSExecute;
+    FIsDebug := True;
+    FCurrentPS := Rep.PSScript;
+    FCurrentPS.ClearBreakPoints;
+    for I := 0 to ListBoxBrkpt.Count - 1 do
+      FCurrentPS.SetBreakPoint('', Integer(ListBoxBrkpt.Items.Objects[I]));
+  end;
+
+  try
+    Rep.LoadFromXMLStream(TestRepStream);
+    Rep.FileName:=SaveR.FileName;
+    case AMode of
+      DP_PREVIEW: Rep.ShowReport;
+      DP_COMPILE: Rep.CompilePS;
+      DP_DEBUG: begin
+        Rep.ShowProgress := False;
+        Rep.ShowReport;
+      end;
+    end;
+    FreeAndNil(Rep)
+  except
+    on E:Exception do
+    begin
+      ShowMessage(E.Message);
+      if Assigned(Rep) then
+        FreeAndNil(Rep)
+    end;
+  end;
+  TestRepStream.Free;
+  FCurrentPS := nil;
+  FIsDebug := False;
+  CurReport:=SaveR;
+  case AMode of
+    DP_PREVIEW: CurPage := 0;
+    DP_DEBUG: SetPSActions(PA_NORMAL);
+  end;
+//  DoResoreFormsName;
+end;
+
+procedure TfrDesignerForm.SetPSActions(AMode: Integer);
+begin
+  case AMode of
+    PA_NORMAL: begin
+      ActPSCompile.Enabled := True;
+      ActPSRun.Enabled := True;
+      ActPSPause.Enabled := False;
+      ActPSStop.Enabled := False;
+      ActPSStepInto.Enabled := False;
+      ActPSStepOver.Enabled := False;
+      ActPSEval.Enabled := False;
+    end;
+    PA_RUN_REP: begin
+      ActPSCompile.Enabled := False;
+      ActPSRun.Enabled := False;
+      ActPSPause.Enabled := False;
+      ActPSStop.Enabled := False;
+      ActPSStepInto.Enabled := False;
+      ActPSStepOver.Enabled := False;
+      ActPSEval.Enabled := False;
+    end;
+    PA_RUN_SCR: begin
+      ActPSCompile.Enabled := False;
+      ActPSRun.Enabled := False;
+      ActPSPause.Enabled := True;
+      ActPSStop.Enabled := True;
+      ActPSStepInto.Enabled := False;
+      ActPSStepOver.Enabled := False;
+      ActPSEval.Enabled := False;
+    end;
+    PA_PAUSE: begin
+      ActPSCompile.Enabled := False;
+      ActPSRun.Enabled := True;
+      ActPSPause.Enabled := False;
+      ActPSStop.Enabled := True;
+      ActPSStepInto.Enabled := True;
+      ActPSStepOver.Enabled := True;
+      ActPSEval.Enabled := True;
+    end;
+  end;
+end;
+
+procedure TfrDesignerForm.SetDlgPgEnabled(AEnabled: Boolean);
+var
+  I: Integer;
+begin
+  if FIsDebug and (FCurrentPS <> nil) and (CurReport <> nil) then
+    for I := 0 to CurReport.Pages.Count - 1 do
+      if (CurReport.Pages[I] is TfrPageDialog)
+        and Assigned(TfrPageDialog(CurReport.Pages[I]).Form)
+        and TfrPageDialog(CurReport.Pages[I]).Form.Visible then
+        EnableWindow(TfrPageDialog(CurReport.Pages[I]).Form.Handle, AEnabled);
+  EnableWindow(Self.Handle, not AEnabled);
 end;
 
 procedure TfrDesignerForm.SetModified(AValue: Boolean);
@@ -5937,7 +6583,7 @@ begin
     begin
       CurReport.PrintToDefault := not CB1.Checked;
       CurReport.DoublePass := CB2.Checked;
-      CurReport.ChangePrinter(Prn.PrinterIndex, ListBox1.ItemIndex);
+      CurReport.ChangePrinter(Prn.PrinterIndex, ListBoxPSMsg.ItemIndex);
       {$IFDEF USE_PRINTER_FONTS}
       // printer may have been changed, invalidate current list of fonts
       C2.Items.Clear;
@@ -6029,6 +6675,25 @@ begin
   ShowGrid := GB1.Down;
 end;
 
+procedure TfrDesignerForm.ListBoxBrkptDblClick(Sender: TObject);
+begin
+  if ListBoxBrkpt.ItemIndex >= 0 then
+  begin
+    SynEditPS.CaretX := 0;
+    SynEditPS.CaretY := Integer(ListBoxBrkpt.Items.Objects[ListBoxBrkpt.ItemIndex]);
+  end;
+end;
+
+procedure TfrDesignerForm.ListBoxPSMsgDblClick(Sender: TObject);
+begin
+  if (ListBoxPSMsg.ItemIndex >= 0) and (ListBoxPSMsg.Items.Objects[ListBoxPSMsg.ItemIndex] <> nil) then
+  begin
+    SynEditPS.CaretX := TCompLineInfo(ListBoxPSMsg.Items.Objects[ListBoxPSMsg.ItemIndex]).Col;
+    SynEditPS.CaretY := TCompLineInfo(ListBoxPSMsg.Items.Objects[ListBoxPSMsg.ItemIndex]).Line;
+    SynEditPS.SetFocus;
+  end;
+end;
+
 procedure TfrDesignerForm.ScrollBox1DragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
@@ -6104,6 +6769,17 @@ begin
     Accept:= (Control = lrFieldsList.lbFieldsList) or (Control = lrFieldsList.ValList);
 end;
 
+procedure TfrDesignerForm.SynEditPSChange(Sender: TObject);
+begin
+  Modified := True;
+end;
+
+procedure TfrDesignerForm.SynEditPSGutterClick(Sender: TObject; X, Y,
+  Line: integer; mark: TSynEditMark);
+begin
+  TogleBreakpoint(Line);
+end;
+
 procedure TfrDesignerForm.tlsDBFieldsExecute(Sender: TObject);
 begin
   if Assigned(lrFieldsList) then
@@ -6144,8 +6820,26 @@ end;
 
 procedure TfrDesignerForm.Tab1Change(Sender: TObject);
 begin
-  if not fInBuildPage and (Tab1.TabIndex>=0) and (CurPage<>Tab1.TabIndex) then
-    CurPage := Tab1.TabIndex;
+  if not fInBuildPage and (Tab1.TabIndex>=0) then
+    if Tab1.TabIndex = 0 then
+    begin
+      panTab.Visible := False;
+      panTabPS.Visible := True;
+      ObjInsp.Select(FReportObj);
+      panForDlg.Visible := False;
+      Panel4.Visible := False;
+      panForPS.Visible := True;
+      frDock4.Visible := False;
+    end
+    else
+     if (CurPage<>Tab1.TabIndex - 1) or panTabPS.Visible then
+     begin
+       CurPage := Tab1.TabIndex - 1;
+       panTabPS.Visible := False;
+       panTab.Visible := True;
+       panForPS.Visible := False;
+       frDock4.Visible := True;
+     end;
 end;
 
 procedure TfrDesignerForm.Popup1Popup(Sender: TObject);
@@ -6284,6 +6978,7 @@ begin
           CanClose := True;
 //          FileModified := False; // no means don't want changes
           Modified := False; // no means don't want changes
+          SynEditPS.Modified := False;
           ModalResult := mrCancel;
         end;
       mrYes:

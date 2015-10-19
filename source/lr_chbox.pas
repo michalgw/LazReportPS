@@ -66,7 +66,7 @@ implementation
 
 {$R lr_checkbox.res}
 
-uses LR_Utils, LR_Const;
+uses LR_Utils, LR_Const, uPSCompiler, uPSRuntime;
 
 var
   lrBMPCheckBox : TBitMap;
@@ -192,6 +192,58 @@ begin
   XML.SetValue(Path+'Data/Checked/Value', GetSaveProperty('Checked'));
 end;
 
+(* === compile-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_TfrCheckBoxView(CL: TPSPascalCompiler);
+begin
+  //with RegClassS(CL,'TfrView', 'TfrCheckBoxView') do
+  with CL.AddClassN(CL.FindClass('TfrView'),'TfrCheckBoxView') do
+  begin
+    RegisterProperty('Checked', 'Boolean', iptrw);
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure SIRegister_LR_ChBox(CL: TPSPascalCompiler);
+begin
+  SIRegister_TfrCheckBoxView(CL);
+end;
+
+(* === run-time registration functions === *)
+(*----------------------------------------------------------------------------*)
+procedure TfrCheckBoxViewChecked_W(Self: TfrCheckBoxView; const T: Boolean);
+begin Self.Checked := T; end;
+
+(*----------------------------------------------------------------------------*)
+procedure TfrCheckBoxViewChecked_R(Self: TfrCheckBoxView; var T: Boolean);
+begin T := Self.Checked; end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_TfrCheckBoxView(CL: TPSRuntimeClassImporter);
+begin
+  with CL.Add(TfrCheckBoxView) do
+  begin
+    RegisterPropertyHelper(@TfrCheckBoxViewChecked_R,@TfrCheckBoxViewChecked_W,'Checked');
+  end;
+end;
+
+(*----------------------------------------------------------------------------*)
+procedure RIRegister_LR_ChBox(CL: TPSRuntimeClassImporter);
+begin
+  RIRegister_TfrCheckBoxView(CL);
+end;
+
+(*----------------------------------------------------------------------------*)
+
+procedure PSCompImportChBox(APSComp: TPSPascalCompiler);
+begin
+  SIRegister_LR_ChBox(APSComp);
+end;
+
+procedure PSExecImportChBox(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
+begin
+  RIRegister_LR_ChBox(APSImporter);
+end;
 
 
 { TfrCheckBoxObject }
@@ -205,7 +257,8 @@ begin
     lrBMPCheckBox := TBitMap.Create;
     lrBMPCheckBox.LoadFromResourceName(HInstance, 'fr_checkbox');
 
-    frRegisterObject(TfrCheckBoxView, lrBMPCheckBox, sInsCheckBox, nil);
+    frRegisterObject(TfrCheckBoxView, lrBMPCheckBox, sInsCheckBox, nil,
+      otlReportView, nil, nil, @PSCompImportChBox, @PSExecImportChBox);
   end;
 end;
 

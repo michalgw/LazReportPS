@@ -23,6 +23,8 @@ uses
   LazFileUtils, LazUTF8, LazUTF8Classes,
   // IDEIntf
   PropEdits,
+  // PascalScript
+  uPSComponent, uPSCompiler, uPSDebugger, uPSRuntime, uPSUtils,
   // LazReport
   LR_View, LR_Pars, LR_Intrp, LR_DSet, LR_DBSet, LR_DBRel, LR_Const, DbCtrls;
 
@@ -59,6 +61,7 @@ const
   gtBand                   = 2;
   gtSubReport              = 3;
   gtLine                   = 4;
+  gtUserDS                 = 5;
   gtAddIn                  = 10;
 
 //format type
@@ -123,6 +126,8 @@ type
   TPrintReportEvent = procedure(sender: TfrReport) of object;
   TFormPageBookmarksEvent = procedure(sender: TfrReport; Backup: boolean) of object;
 
+  TAfterCompileEvent = procedure(Sender: TfrReport; Success: Boolean) of object;
+
   TfrHighlightAttr = packed record
     FontStyle: Word;
     FontColor, FillColor: TColor;
@@ -184,7 +189,8 @@ type
     fScript : TfrScriptStrings;
     fVisible: Boolean;
     fUpdate : Integer;
-    
+    FPSOnEnter: String;
+
     procedure SetMemo(const AValue: TfrMemoStrings);
     procedure SetScript(const AValue: TfrScriptStrings);
   protected
@@ -237,6 +243,7 @@ type
   published
     property Name   : string read fName write SetName;
     property Visible: Boolean read fVisible write SetVisible;
+    property PSOnEnter: String read FPSOnEnter write FPSOnEnter;
   end;
   
   { TfrView }
@@ -407,6 +414,31 @@ type
     procedure Draw(ACanvas: TCanvas); override;
   end;
 
+  { TlrUserDSControl }
+
+  TlrUserDSControl = class(TfrNonVisualControl)
+  private
+    FUserDS: TfrUserDataset;
+    FPSOnCheckEof: String;
+    FPSOnFirst: String;
+    FPSOnNext: String;
+    procedure DSCheckEOF(Sender: TObject; var Eof: Boolean);
+    procedure DSFirst(Sender: TObject);
+    procedure DSNext(Sender: TObject);
+  protected
+    procedure SetName(const AValue: string); override;
+  public
+    constructor Create(AOwnerPage: TfrPage); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    procedure LoadFromXML(XML: TLrXMLConfig; const Path: String); override;
+    procedure SaveToXML(XML: TLrXMLConfig; const Path: String); override;
+    property UserDS: TfrUserDataset read FUserDS;
+  published
+    property PSOnCheckEof: String read FPSOnCheckEof write FPSOnCheckEof;
+    property PSOnFirst: String read FPSOnFirst write FPSOnFirst;
+    property PSOnNext: String read FPSOnNext write FPSOnNext;
+  end;
 
   { TfrCustomMemoView }
 
@@ -420,6 +452,10 @@ type
     FOnMouseEnter: TfrScriptStrings;
     FOnMouseLeave: TfrScriptStrings;
     FParagraphGap: integer;
+
+    FPSOnClick: String;
+    FPSOnMouseEnter: String;
+    FPSOnMouseLeave: String;
 
     function GetAlignment: TAlignment;
     function GetAngle: Byte;
@@ -517,6 +553,10 @@ type
     property OnMouseLeave : TfrScriptStrings read FOnMouseLeave write SetOnMouseLeave;
     property ParagraphGap : integer read FParagraphGap write FParagraphGap;
     property LineSpacing : integer read FLineSpacing write FLineSpacing;
+
+    property PSOnClick: String read FPSOnClick write FPSOnClick;
+    property PSOnMouseEnter: String read FPSOnMouseEnter write FPSOnMouseEnter;
+    property PSOnMouseLeave: String read FPSOnMouseLeave write FPSOnMouseLeave;
   end;
 
   TfrMemoView = class(TfrCustomMemoView)
@@ -549,6 +589,9 @@ type
     property LineSpacing;
     property GapX;
     property GapY;
+    property PSOnClick;
+    property PSOnMouseEnter;
+    property PSOnMouseLeave;
   end;
 
   { TfrBandView }
@@ -873,6 +916,7 @@ type
     function BottomMargin: Integer;
     function LeftMargin: Integer;
     function RightMargin: Integer;
+    function Add(AObject: TfrObject): Integer;
     procedure Clear;
     procedure Delete(Index: Integer);
     function FindObjectByID(ID: Integer): Integer;
@@ -900,7 +944,7 @@ type
     property LastRowHeight: Integer read fLastRowHeight write fLastRowHeight;
     property RowStarted: boolean read fRowStarted write fRowStarted;
     property LastBandType: TfrBandType read fLastBandType write fLastbandType;
-
+    property frObjects: TFPList read Objects;
   published
     property Script;
     property Height;
@@ -936,9 +980,12 @@ type
     fHasVisibleControls : Boolean;
     FForm               : TfrDialogForm;
     FCaption            : string;
+    FShowDialog         : Boolean;
     procedure EditFormDestroy(Sender: TObject);
     function GetCaption: string;
+    function GetModalResult: Integer;
     procedure SetCaption(AValue: string);
+    procedure SetModalResult(AValue: Integer);
     procedure UpdateControlPosition;
   protected
     procedure PrepareObjects; override;
@@ -955,11 +1002,14 @@ type
 
     procedure LoadFromXML(XML: TLrXMLConfig; const Path: String); override;
     procedure SavetoXML(XML: TLrXMLConfig; const Path: String); override;
+    function ShowModal: Integer;
     property Form:TfrDialogForm read FForm;
+    property ModalResult: Integer read GetModalResult write SetModalResult;
   published
     property Caption : string read GetCaption write SetCaption;
     property Left;
     property Top;
+    property ShowDialog: Boolean read FShowDialog write FShowDialog;
   end;
 
   { TfrPages }
@@ -1175,8 +1225,31 @@ type
     FXMLReport    : string;
     fDefExportFilterClass: string;
     fDefExportFileName: string;
+    FPasScript: TPSScriptDebugger;
+    FPSOnInit: String; // function OnInit: Boolean;
+    FPSOnExec: String; // function OnExec: Boolean;
+    FPSOnBeginBand: String; // procedure OnBeginBand(Band: TfrBand);
+    FPSOnEndBand: String; // procedure OnEndBand(Band: TfrBand);
+    FPSOnBeginColumn: String; // procedure OnBeginColumn(Band: TfrBand);
+    FPSOnEnterRect: String; // procedure OnEnterRect(Memo: TStringList; View: TfrView);
+    FPSOnPrintColumn: String; // procedure OnPrintColumn(ColNo: Integer; var Width: Integer);
+    FPSOnMouseOverObject: String; // procedure OnMouseOverObject(View: TfrView; var ACursor: TCursor);
+    FPSOnObjectClick: String; // procedure OnObjectClick(Viev: TfrView);
+    FPSOnGetValue: String; // procedure OnGetValue(const ValName: String; var AValue: Variant);
+    FPSOnUserFunction: String; // procedure OnUserFunction(AName: String; P1, P2, P3: Variant; var AValue: Variant);
 
+    FShowCompileErrors: Boolean;
+    FShowRuntimeErrors: Boolean;
+    FOnCompile: TPSEvent;
+    FOnExecute: TPSEvent;
+    FOnCompImport: TPSOnCompImportEvent;
+    FOnExecImport: TPSOnExecImportEvent;
+    FAfterCompile: TAfterCompileEvent;
+    FOnExecError: TNotifyEvent;
 
+    function GetPasScript: TStrings;
+    function GetPSPlugins: TPSPlugins;
+    function GetPSScript: TPSScriptDebugger;
     procedure OnGetParsFunction(const aName: String; p1, p2, p3: Variant;
                                 var val: Variant);
     function DoInterpFunction(const aName: String; p1, p2, p3: Variant;
@@ -1189,6 +1262,7 @@ type
     procedure DoBuildReport; virtual;
     procedure DoPrintReport(const PageNumbers: String; Copies: Integer);
     procedure SetComments(const AValue: TStringList);
+    procedure SetPasScript(AValue: TStrings);
     procedure SetPrinterTo(const PrnName: String);
     procedure SetScript(AValue: TfrScriptStrings);
     procedure SetVars(Value: TStrings);
@@ -1196,6 +1270,18 @@ type
     function FindObjectByName(AName:string):TfrObject;
     procedure ExecScript;
     procedure CheckFileExists(FName: string);
+    procedure PSCompImport(Sender: TObject; x: TPSPascalCompiler);
+    procedure PSExecImport(Sender: TObject; se: TPSExec;
+      x: TPSRuntimeClassImporter);
+    procedure PSExecute(Sender: TPSScript);
+    procedure PSCompile(Sender: TPSScript);
+    procedure PSExecOnBand(ProcName: String; Band: TfrBand);
+    procedure PSExecOnEnterRec(ProcName: String; Memo: TStringList; View: TfrView);
+    procedure PSExecOnPrintColumn(ProcName: String; ColNo: Integer; var Width: Integer);
+    procedure PSExecOnMouseOverObj(ProcName: String; View: TfrView; var ACursor: TCursor);
+    procedure PSExecOnView(ProcName: String; View: TfrView);
+    procedure PSExecOnGetValue(ProcName: String; const ValName: String; var AValue: Variant);
+    procedure PSExecOnUserFunc(ProcName: String; AName: String; P1, P2, P3: Variant; var AValue: Variant);
   protected
     function DoObjectClick(AObj:TfrView):boolean;
     procedure DoBeginBand(Band: TfrBand); virtual;
@@ -1209,6 +1295,7 @@ type
     procedure DoGetValue(const ParName: String; var ParValue: Variant); virtual;
     procedure DoPrintColumn(ColNo: Integer; var Width: Integer); virtual;
     procedure DoUserFunction(const AName: String; p1, p2, p3: Variant; var Val: Variant); virtual;
+    procedure DoExecError; virtual;
     procedure DefineProperties(Filer: TFiler); override;
     procedure ReadBinaryData(Stream: TStream);
     procedure ReadStoreInDFM(Reader: TReader);
@@ -1275,6 +1362,8 @@ type
     procedure PrintPreparedReport(const PageNumbers: String; Copies: Integer);
     function ChangePrinter(OldIndex, NewIndex: Integer): Boolean;
     procedure EditPreparedReport(PageIndex: Integer);
+
+    function CompilePS: Boolean;
     //
     property Subject : string read FSubject write FSubject;
     property KeyWords : string read FKeyWords write FKeyWords;
@@ -1299,6 +1388,8 @@ type
     property DefaultCollate : boolean read FDefaultCollate write FDefaultCollate;
 
     property DetailReports:TlrDetailReports read FDetailReports;
+
+    property PSScript: TPSScriptDebugger read GetPSScript;
   published
     property Dataset: TfrDataset read FDataset write FDataset;
     property DefaultCopies: Integer read FDefaultCopies write FDefaultCopies default 1;
@@ -1316,6 +1407,22 @@ type
     property DataType : TfrDataType read FDataType write FDataType;
 
     property Title: String read FTitle write FTitle;
+
+    property PasScript: TStrings read GetPasScript write SetPasScript;
+    property ShowCompileErrors: Boolean read FShowCompileErrors write FShowCompileErrors;
+    property ShowRuntimeErrors: Boolean read FShowRuntimeErrors write FShowRuntimeErrors;
+    property PSPlugins: TPSPlugins read GetPSPlugins;
+    property PSOnExec: String read FPSOnExec write FPSOnExec;
+    property PSOnInit: String read FPSOnInit write FPSOnInit;
+    property PSOnBeginBand: String read FPSOnBeginBand write FPSOnBeginBand;
+    property PSOnEndBand: String read FPSOnEndBand write FPSOnEndBand;
+    property PSOnBeginColumn: String read FPSOnBeginColumn write FPSOnBeginColumn;
+    property PSOnEnterRect: String read FPSOnEnterRect write FPSOnEnterRect;
+    property PSOnPrintColumn: String read FPSOnPrintColumn write FPSOnPrintColumn;
+    property PSOnMouseOverObject: String read FPSOnMouseOverObject write FPSOnMouseOverObject;
+    property PSOnObjectClick: String read FPSOnObjectClick write FPSOnObjectClick;
+    property PSOnGetValue: String read FPSOnGetValue write FPSOnGetValue;
+    property PSOnUserFunction: String read FPSOnUserFunction write FPSOnUserFunction;
 
     property OnBeginDoc: TBeginDocEvent read FOnBeginDoc write FOnBeginDoc;
     property OnEndDoc: TEndDocEvent read FOnEndDoc write FOnEndDoc;
@@ -1338,6 +1445,13 @@ type
     property OnObjectClick: TObjectClickEvent read FObjectClick write FObjectClick;
     property OnMouseOverObject: TMouseOverObjectEvent read FMouseOverObject write FMouseOverObject;
     property OnFormPageBookmarks: TFormPageBookmarksEvent read fOnFormPageBookmarks write fOnFormPageBookmarks;
+
+    property OnCompile: TPSEvent read FOnCompile write FOnCompile;
+    property OnExecute: TPSEvent read FOnExecute write FOnExecute;
+    property OnCompImport: TPSOnCompImportEvent read FOnCompImport write FOnCompImport;
+    property OnExecImport: TPSOnExecImportEvent read FOnExecImport write FOnExecImport;
+    property OnExecError: TNotifyEvent read FOnExecError write FOnExecError;
+    property AfterCompile: TAfterCompileEvent read FAfterCompile write FAfterCompile;
   end;
 
   TfrCompositeReport = class(TfrReport)
@@ -1430,11 +1544,14 @@ type
 
   TfrAddinInitProc = procedure;
 
+  TfrPSCompImport = procedure(APSComp: TPSPascalCompiler);
+  TfrPSExecImport = procedure(APSExec: TPSExec; APSImporter: TPSRuntimeClassImporter);
 
 function frCreateObject(Typ: Byte; const ClassName: String; AOwnerPage:TfrPage): TfrView;
 procedure frRegisterObject(ClassRef: TFRViewClass; ButtonBmp: TBitmap;
   const ButtonHint: String; EditorForm: TfrObjEditorForm; ObjectType:TfrObjectType;
-  InitProc:TfrAddinInitProc; EditorProc : TlrObjEditorProc = nil);
+  InitProc:TfrAddinInitProc; EditorProc : TlrObjEditorProc = nil;
+  PSCompImpotrProc: TfrPSCompImport = nil; PSExecImportProc: TfrPSExecImport = nil);
 
 procedure frRegisterObject(ClassRef: TFRViewClass; ButtonBmp: TBitmap;
   const ButtonHint: String; EditorForm: TfrObjEditorForm; InitProc:TfrAddinInitProc=nil);
@@ -1452,6 +1569,8 @@ function frGetBandName(BandType: TfrBandType): string;
 procedure frSelectHyphenDictionary(ADict: string);
 function FindObjectProps(AObjStr:string; out frObj:TfrObject; out PropName:string;
   out PropIndex:Integer):PPropInfo;
+
+procedure frRuntimeErrorDlg(APSScript: TPSScript);
 
 const
   lrTemplatePath = 'LazReportTemplate/';
@@ -1496,6 +1615,8 @@ type
     InitializeProc: TfrAddinInitProc;
     ObjectType:TfrObjectType;
     EditorProc : TlrObjEditorProc;
+    PSCompImportProc: TfrPSCompImport;
+    PSExecImportProc: TfrPSExecImport;
   end;
 
   { TExportFilterItem }
@@ -1592,7 +1713,9 @@ implementation
 
 uses
   LR_Fmted, LR_Prntr, LR_Progr, LR_Utils
-  {$IFDEF JPEG}, JPEG {$ENDIF}, lr_hyphen;
+  {$IFDEF JPEG}, JPEG {$ENDIF}, lr_hyphen,
+  uPSC_std, uPSR_std, uPSC_classes, uPSR_classes,
+  lr_psic, lr_psir;
 
 type
 
@@ -1773,6 +1896,12 @@ begin
   end;
 end;
 
+procedure frRuntimeErrorDlg(APSScript: TPSScript);
+begin
+  MessageDlg('PascalScript Runtime error',
+    APSScript.ExecErrorToString, mtError, [mbOK], 0);
+end;
+
 function ExportFilters: TExportFilters;
 begin
   if not Assigned(FExportFilters) then
@@ -1867,6 +1996,7 @@ begin
     gtBand:      Result := TfrBandView.Create(AOwnerPage);
     gtSubReport: Result := TfrSubReportView.Create(AOwnerPage);
     gtLine:      Result := TfrLineView.Create(AOwnerPage);
+    gtUserDS:    Result := TlrUserDSControl.Create(AOwnerPage);
     gtAddIn:
       begin
         for i := 0 to frAddInsCount - 1 do
@@ -1903,7 +2033,8 @@ end;
 procedure frRegisterObject(ClassRef: TFRViewClass; ButtonBmp: TBitmap;
   const ButtonHint: String; EditorForm: TfrObjEditorForm;
   ObjectType: TfrObjectType; InitProc: TfrAddinInitProc;
-  EditorProc: TlrObjEditorProc = nil);
+  EditorProc: TlrObjEditorProc; PSCompImpotrProc: TfrPSCompImport;
+  PSExecImportProc: TfrPSExecImport);
 begin
   frAddIns[frAddInsCount].ClassRef := ClassRef;
   frAddIns[frAddInsCount].EditorForm := EditorForm;
@@ -1912,6 +2043,8 @@ begin
   frAddIns[frAddInsCount].InitializeProc := InitProc;
   frAddIns[frAddInsCount].ObjectType:=ObjectType;
   frAddIns[frAddInsCount].EditorProc:= EditorProc;
+  frAddIns[frAddInsCount].PSCompImportProc := PSCompImpotrProc;
+  frAddIns[frAddInsCount].PSExecImportProc := PSExecImportProc;
   if frDesigner <> nil then begin
     if Assigned(InitProc) then
       InitProc;
@@ -2559,6 +2692,89 @@ begin
   RestoreCoord;
 end;
 
+{ TlrUserDSControl }
+
+procedure TlrUserDSControl.DSCheckEOF(Sender: TObject; var Eof: Boolean);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  ArgV: TPSVariantClass;
+  ArgC: TPSVariantU8;
+begin
+  if not Assigned(CurReport) or (FPSOnCheckEof = '') then
+    Exit;
+  Proc := CurReport.PSScript.Exec.GetProc(FPSOnCheckEof);
+  Params := TPSList.Create;
+  ArgC.VI.FType := CurReport.PSScript.Exec.FindType2(btU8);
+  ArgC.Data := Byte(Eof);
+  Params.Add(@ArgC);
+  ArgV.VI.FType := CurReport.PSScript.Exec.FindType2(btClass);
+  ArgV.Data := Self;
+  Params.Add(@ArgV);
+  if CurReport.PSScript.Exec.RunProc(Params, Proc) then
+    Eof := Boolean(ArgC.Data);
+  Params.Free;
+end;
+
+procedure TlrUserDSControl.DSFirst(Sender: TObject);
+begin
+  if (PSOnFirst <> '') and Assigned(CurReport) then
+    CurReport.PSExecOnView(FPSOnFirst, Self);
+end;
+
+procedure TlrUserDSControl.DSNext(Sender: TObject);
+begin
+  if (PSOnFirst <> '') and Assigned(CurReport) then
+    CurReport.PSExecOnView(FPSOnNext, Self);
+end;
+
+procedure TlrUserDSControl.SetName(const AValue: string);
+begin
+  inherited SetName(AValue);
+  FUserDS.Name := '_' + AValue;
+end;
+
+constructor TlrUserDSControl.Create(AOwnerPage: TfrPage);
+begin
+  inherited Create(AOwnerPage);
+  FUserDS := TfrUserDataset.Create(nil);
+  FUserDS.OnCheckEOF := @DSCheckEOF;
+  FUserDS.OnFirst := @DSFirst;
+  FUserDS.OnNext := @DSNext;
+  Typ := gtUserDS;
+  BaseName := 'UserDS';
+end;
+
+destructor TlrUserDSControl.Destroy;
+begin
+  FUserDS.Free;
+  inherited Destroy;
+end;
+
+procedure TlrUserDSControl.Assign(Source: TPersistent);
+begin
+  inherited Assign(Source);
+  FPSOnCheckEof := TlrUserDSControl(Source).FPSOnCheckEof;
+  FPSOnFirst := TlrUserDSControl(Source).FPSOnFirst;
+  FPSOnNext := TlrUserDSControl(Source).FPSOnNext;
+end;
+
+procedure TlrUserDSControl.LoadFromXML(XML: TLrXMLConfig; const Path: String);
+begin
+  inherited LoadFromXML(XML, Path);
+  FPSOnCheckEof := XML.GetValue(Path+'PSOnCheckEof/Value', '');
+  FPSOnFirst := XML.GetValue(Path+'PSOnFirst/Value', '');
+  FPSOnNext := XML.GetValue(Path+'PSOnNext/Value', '');
+end;
+
+procedure TlrUserDSControl.SaveToXML(XML: TLrXMLConfig; const Path: String);
+begin
+  inherited SaveToXML(XML, Path);
+  XML.SetValue(Path+'PSOnCheckEof/Value', FPSOnCheckEof);
+  XML.SetValue(Path+'PSOnFirst/Value', FPSOnFirst);
+  XML.SetValue(Path+'PSOnNext/Value', FPSOnNext);
+end;
+
 {----------------------------------------------------------------------------}
 constructor TfrView.Create(AOwnerPage: TfrPage);
 begin
@@ -2837,6 +3053,8 @@ begin
   BeginDraw(Canvas);
   Memo1.Assign(Memo);
   CurReport.InternalOnEnterRect(Memo1, Self);
+  if FPSOnEnter <> '' then
+    CurReport.PSExecOnView(FPSOnEnter, Self);
   frInterpretator.DoScript(Script);
   if not Visible then Exit;
 
@@ -3606,6 +3824,10 @@ begin
     FDetailReport:=TfrCustomMemoView(Source).FDetailReport;
     FCursor:=TfrCustomMemoView(Source).FCursor;
     FParagraphGap:=TfrCustomMemoView(Source).FParagraphGap;
+
+    FPSOnClick:=TfrCustomMemoView(Source).FPSOnClick;
+    FPSOnMouseEnter:=TfrCustomMemoView(Source).FPSOnMouseEnter;
+    FPSOnMouseLeave:=TfrCustomMemoView(Source).FPSOnMouseLeave;
   end;
 end;
 
@@ -4352,10 +4574,14 @@ begin
   BeginDraw(TempBmp.Canvas);
   Streaming := True;
   if DrawMode = drAll then
+  begin
+    if PSOnEnter <> '' then
+      CurReport.PSExecOnView(PSOnEnter, Self);
     frInterpretator.DoScript(Script);
+  end;
 
   CanExpandVar := True;
-  if (DrawMode = drAll) and (Assigned(CurReport.OnEnterRect) or
+  if (DrawMode = drAll) and (Assigned(CurReport.OnEnterRect) or (CurReport.PSOnEnterRect <> '') or
      ((FDataSet <> nil) and frIsBlob(TfrTField(FDataSet.FindField(FField))))) then
   begin
     Memo1.Assign(Memo);
@@ -4453,6 +4679,8 @@ begin
   Result := 0;
   DrawMode := drAfterCalcHeight;
   BeginDraw(TempBmp.Canvas);
+  if PSOnEnter <> '' then
+    CurReport.PSExecOnView(PSOnEnter, Self);
   frInterpretator.DoScript(Script);
   if not Visible then Exit;
   {$IFDEF DebugLR}
@@ -4609,6 +4837,10 @@ begin
   FDetailReport:= XML.GetValue(Path+'Data/DetailReport/Value', '');
   FParagraphGap:=XML.GetValue(Path+'Data/ParagraphGap/Value', 0);
   FLineSpacing:=XML.GetValue(Path+'Data/LineSpacing/Value', 2);
+
+  FPSOnClick:=XML.GetValue(Path+'PSOnClick/Value', '');
+  FPSOnMouseEnter:=XML.GetValue(Path+'PSOnMouseEnter/Value', '');
+  FPSOnMouseLeave:=XML.GetValue(Path+'PSOnMouseLeave/Value', '');
 end;
 
 procedure TfrCustomMemoView.SaveToStream(Stream: TStream);
@@ -4683,6 +4915,10 @@ begin
   XML.SetValue(Path+'Data/DetailReport/Value', FDetailReport);
   XML.SetValue(Path+'Data/ParagraphGap/Value', FParagraphGap);
   XML.SetValue(Path+'Data/LineSpacing/Value', FLineSpacing);
+
+  XML.SetValue(Path+'PSOnClick/Value', FPSOnClick);
+  XML.SetValue(Path+'PSOnMouseEnter/Value', FPSOnMouseEnter);
+  XML.SetValue(Path+'PSOnMouseLeave/Value', FPSOnMouseLeave);
 end;
 
 procedure TfrCustomMemoView.GetBlob(b: TfrTField);
@@ -4755,6 +4991,8 @@ begin
   if not Assigned(CurReport) then
     exit;
 
+  if (FPSOnClick <> '') and Assigned(CurReport) then
+    CurReport.PSExecOnView(FPSOnClick, Self);
   if (FOnClick.Count>0) and (Trim(FOnClick.Text)<>'') then
     DoRunScript(FOnClick);
 
@@ -4812,12 +5050,16 @@ end;
 
 procedure TfrCustomMemoView.DoMouseEnter;
 begin
+  if (FPSOnMouseEnter <> '') and Assigned(CurReport) then
+    CurReport.PSExecOnView(FPSOnMouseEnter, Self);
   if (FOnMouseEnter.Count>0) and (Trim(FOnMouseEnter.Text)<>'') and (Assigned(CurReport))then
     DoRunScript(FOnMouseEnter);
 end;
 
 procedure TfrCustomMemoView.DoMouseLeave;
 begin
+  if (FPSOnMouseLeave <> '') and Assigned(CurReport) then
+    CurReport.PSExecOnView(FPSOnMouseLeave, Self);
   if (FOnMouseLeave.Count>0) and (Trim(FOnMouseLeave.Text)<>'') and (Assigned(CurReport))then
     DoRunScript(FOnMouseLeave);
 end;
@@ -6593,6 +6835,8 @@ begin
         else
         begin
           CurView := t;
+          if (t.FPSOnEnter <> '') and Assigned(CurReport) then
+            CurReport.PSExecOnBand(PSOnEnter, Self);
           frInterpretator.DoScript(t.Script);
         end;
     end;
@@ -6649,6 +6893,8 @@ begin
   if Typ = btPageFooter then Exit;
   IsColumns := True;
   CurReport.DoBeginColumn(Self);
+  if CurReport.PSOnBeginColumn <> '' then
+    CurReport.PSExecOnBand(CurReport.PSOnBeginColumn, Self);
 
   if Parent.BandExists(Parent.Bands[btCrossHeader]) then
   begin
@@ -6676,6 +6922,8 @@ begin
         begin
           ddx := Bnd.dx;
           CurReport.DoPrintColumn(Parent.ColPos, ddx);
+          if CurReport.PSOnPrintColumn <> '' then
+            CurReport.PSExecOnPrintColumn(CurReport.PSOnPrintColumn, Parent.ColPos, ddx);
           CheckColumnPageBreak(ddx);
           Bnd.DrawCrossCell(Self, CurX);
 
@@ -7116,6 +7364,8 @@ begin
   ForceNewPage := False;
   ForceNewColumn := False;
   CurReport.DoBeginBand(Self);
+  if CurReport.FPSOnBeginBand <> '' then
+    CurReport.PSExecOnBand(CurReport.FPSOnBeginBand, Self);
   frInterpretator.DoScript(Script);
 
   if Parent.RowsLayout and IsDataBand then
@@ -7220,6 +7470,8 @@ begin
   end;
   
   CurReport.DoEndBand(Self);
+  if CurReport.FPSOnEndBand <> '' then
+    CurReport.PSExecOnBand(CurReport.FPSOnEndBand, Self);
   Parent.LastBandType := typ;
   {$IFDEF debugLr}
   DebugLnExit('TFrBand.Draw END %s y=%d PageNo=%d EOFReached=',[dbgsname(self),y, PageNo]);
@@ -7535,6 +7787,11 @@ begin
     end
     else Result := Pgw;
   end;
+end;
+
+function TfrPage.Add(AObject: TfrObject): Integer;
+begin
+  Result := Objects.Add(AObject);
 end;
 
 procedure TfrPage.TossObjects;
@@ -9737,6 +9994,14 @@ begin
   FComments:=TStringList.Create;
   FScript:=TfrScriptStrings.Create;
   UpdateObjectStringResources;
+  FPasScript := TPSScriptDebugger.Create(Self);
+  FPasScript.CompilerOptions := [icAllowNoBegin, icAllowNoEnd];
+  FPasScript.OnCompImport := @PSCompImport;
+  FPasScript.OnExecImport := @PSExecImport;
+  FPasScript.OnExecute := @PSExecute;
+  FPasScript.OnCompile := @PSCompile;
+  FShowCompileErrors := True;
+  FShowRuntimeErrors := True;
 end;
 
 destructor TfrReport.Destroy;
@@ -9751,6 +10016,7 @@ begin
   FComments.Free;
   FreeAndNil(FDetailReports);
   FreeAndNil(FScript);
+  FPasScript.Free;
   inherited Destroy;
 end;
 
@@ -9914,6 +10180,8 @@ begin
     if (FDataSet <> nil) and frIsBlob(TfrTField(FDataSet.FindField(FField))) then
       GetBlob(TfrTField(FDataSet.FindField(FField)));
   DoEnterRect(Memo, View);
+  if FPSOnEnterRect <> '' then
+    PSExecOnEnterRec(FPSOnEnterRect, Memo, View);
 end;
 
 procedure TfrReport.InternalOnExportData(View: TfrView);
@@ -10049,6 +10317,8 @@ begin
   TVarData(aValue).VType := varEmpty;
 
   DoGetValue(s,aValue);
+  if FPSOnGetValue <> '' then
+    PSExecOnGetValue(FPSOnGetValue, s, aValue);
      
   if TVarData(aValue).VType = varEmpty then
   begin
@@ -10235,7 +10505,24 @@ begin
   begin
     if Assigned(AggrBand){ and AggrBand.Visible } then
       DoUserFunction(aName, p1, p2, p3, val);
+    if FPSOnUserFunction <> '' then
+      PSExecOnUserFunc(FPSOnUserFunction, aName, p1, p2, p3, val);
   end;
+end;
+
+function TfrReport.GetPasScript: TStrings;
+begin
+  Result := FPasScript.Script;
+end;
+
+function TfrReport.GetPSPlugins: TPSPlugins;
+begin
+  Result := FPasScript.Plugins;
+end;
+
+function TfrReport.GetPSScript: TPSScriptDebugger;
+begin
+  Result := FPasScript;
 end;
 
 function TfrReport.DoInterpFunction(const aName: String; p1, p2, p3: Variant;
@@ -10365,6 +10652,19 @@ begin
   FReportAutor:=XML.GetValue(Path+'ReportAutor/Value', '');
   FScript.Text:= XML.GetValue(Path+'Script/Value', '');
 
+  FPasScript.Script.Text := XML.GetValue(Path+'PascalScript/Value', '');
+  FPSOnExec := XML.GetValue(Path+'PSOnExec/Value', '');
+  FPSOnInit := XML.GetValue(Path+'PSOnInit/Value', '');
+  FPSOnBeginBand := XML.GetValue(Path+'PSOnBeginBand/Value', '');
+  FPSOnEndBand := XML.GetValue(Path+'PSOnEndBand/Value', '');
+  FPSOnBeginColumn := XML.GetValue(Path+'PSOnBeginColumn/Value', '');
+  FPSOnEnterRect := XML.GetValue(Path+'PSOnEnterRect/Value', '');
+  FPSOnPrintColumn := XML.GetValue(Path+'PSOnPrintColumn/Value', '');
+  FPSOnMouseOverObject := XML.GetValue(Path+'PSOnMouseOverObject/Value', '');
+  FPSOnObjectClick := XML.GetValue(Path+'PSOnObjectClick/Value', '');
+  FPSOnGetValue := XML.GetValue(Path+'PSOnGetValue/Value', '');
+  FPSOnUserFunction := XML.GetValue(Path+'PSOnUserFunction/Value', '');
+
   if frVersion < 21 then
     frVersion := 21;
 
@@ -10487,6 +10787,20 @@ begin
   XML.SetValue(Path+'ReportAutor/Value', FReportAutor);
 
   XML.SetValue(Path+'Script/Value', FScript.Text);
+
+  XML.SetValue(Path+'PascalScript/Value', FPasScript.Script.Text);
+  XML.SetValue(Path+'PSOnExec/Value', FPSOnExec);
+  XML.SetValue(Path+'PSOnInit/Value', FPSOnInit);
+  XML.SetValue(Path+'PSOnBeginBand/Value', FPSOnBeginBand);
+  XML.SetValue(Path+'PSOnEndBand/Value', FPSOnEndBand);
+  XML.SetValue(Path+'PSOnEnterRect/Value', FPSOnEnterRect);
+  XML.SetValue(Path+'PSOnPrintColumn/Value', FPSOnPrintColumn);
+  XML.SetValue(Path+'PSOnBeginColumn/Value', FPSOnBeginColumn);
+  XML.SetValue(Path+'PSOnMouseOverObject/Value', FPSOnMouseOverObject);
+  XML.SetValue(Path+'PSOnObjectClick/Value', FPSOnObjectClick);
+  XML.SetValue(Path+'PSOnGetValue/Value', FPSOnGetValue);
+  XML.SetValue(Path+'PSOnUserFunction/Value', FPSOnUserFunction);
+
 
   Pages.SaveToXML(XML, Path+'Pages/');
 
@@ -10797,7 +11111,6 @@ begin
   frParser.OnGetValue := @GetVariableValue;
   frParser.OnFunction := @OnGetParsFunction;
   DoBeginDoc;
-
   Result := False;
   ParamOk := True;
   if frDataManager <> nil then
@@ -11051,10 +11364,15 @@ var
   i  : Integer;
   b  : Boolean;
   BM : Pointer;
+  ReportData: TMemoryStream;
 begin
   {$IFDEF DebugLR}
   DebugLnEnter('TfrReport.DoBuildReport INIT');
   {$ENDIF}
+  if not CompilePS then
+    Exit;
+  ReportData := TMemoryStream.Create;
+  SaveToXMLStream(ReportData);
   HookList.Clear;
   CanRebuild := True;
   DocMode := dmPrinting;
@@ -11074,22 +11392,31 @@ begin
   try
     if (DoublePass and not FinalPass) or (not DoublePass) then
     begin
-      ExecScript;
-
-      for i := 0 to Pages.Count - 1 do
-        Pages[i].Skip := False;
-
-      for i := 0 to Pages.Count - 1 do
+      if FPSOnInit <> '' then
+        Terminated := not FPasScript.ExecuteFunction([], FPSOnInit);
+      if not Terminated then
       begin
-        if Pages[i] is TfrPageDialog then
+        ExecScript;
+
+        for i := 0 to Pages.Count - 1 do
+          Pages[i].Skip := False;
+
+        for i := 0 to Pages.Count - 1 do
         begin
-          Pages[i].InitReport;
-          if Terminated then
+          if Pages[i] is TfrPageDialog then
           begin
-            FinalPass:=true;
-            break;
+            Pages[i].InitReport;
+            if Terminated then
+            begin
+              FinalPass:=true;
+              break;
+            end;
           end;
         end;
+
+        if (not Terminated) and (FPSOnExec <> '') then
+          Terminated := not FPasScript.ExecuteFunction([], FPSOnExec);
+
       end;
     end;
 
@@ -11172,6 +11499,9 @@ begin
   if (frDataManager <> nil) and FinalPass then
     frDataManager.AfterPreparing;
   Values.Items.Sorted := False;
+  ReportData.Position := 0;
+  LoadFromXMLStream(ReportData);
+  ReportData.Free;
   {$IFDEF DebugLR}
   DebugLnExit('TfrReport.DoBuildReport DONE');
   {$ENDIF}
@@ -11465,6 +11795,11 @@ begin
   FComments.Assign(AValue);
 end;
 
+procedure TfrReport.SetPasScript(AValue: TStrings);
+begin
+  FPasScript.Script.Assign(AValue);
+end;
+
 // printer manipulation methods
 
 procedure TfrReport.SetPrinterTo(const PrnName: String);
@@ -11582,6 +11917,27 @@ begin
   end;
 end;
 
+function TfrReport.CompilePS: Boolean;
+var
+  I: Integer;
+  S: String;
+  Fnd: Boolean;
+begin
+  Result := False;
+  FPasScript.Exec.Clear;
+  FPasScript.Comp.Clear;
+  Result := FPasScript.Compile;
+  if Assigned(FAfterCompile) then
+    FAfterCompile(Self, Result);
+  if (not Result) and FShowCompileErrors then
+  begin
+    S := '';
+    for I := 0 to FPasScript.CompilerMessageCount - 1 do
+      S := S + FPasScript.CompilerMessages[I].MessageToString + LineEnding;
+    MessageDlg('Compile error', S, mtError, [mbOK], 0);
+  end;
+end;
+
 
 // miscellaneous methods
 procedure TfrReport.PrepareDataSets;
@@ -11662,6 +12018,235 @@ begin
       [sReportLoadingError, sFileNotFound, FName]);
 end;
 
+procedure TfrReport.PSCompImport(Sender: TObject; x: TPSPascalCompiler);
+var
+  I: Integer;
+begin
+  SIRegister_Std(x);
+  SIRegister_Classes(x, True);
+  lr_psicomp(x);
+  for I := 0 to frAddInsCount - 1 do
+    if frAddIns[I].PSCompImportProc = nil then
+      x.AddClassN(x.FindClass('TfrView'), frAddIns[I].ClassRef.ClassName)
+    else
+      frAddIns[I].PSCompImportProc(x);
+  if Assigned(FOnCompImport) then
+    FOnCompImport(Sender, x);;
+end;
+
+procedure TfrReport.PSExecImport(Sender: TObject; se: TPSExec;
+  x: TPSRuntimeClassImporter);
+var
+  I: Integer;
+begin
+  RIRegister_Std(x);
+  RIRegister_Classes(x, True);
+  lr_psirunt(se, x);
+  for I := 0 to frAddInsCount - 1 do
+    if frAddIns[I].PSExecImportProc <> nil then
+      frAddIns[I].PSExecImportProc(se, x);
+  if Assigned(FOnExecImport) then
+    FOnExecImport(Sender, se, x);
+end;
+
+procedure TfrReport.PSExecute(Sender: TPSScript);
+var
+  I, J: Integer;
+begin
+  FPasScript.SetVarToInstance('Report', Self);
+  FPasScript.SetVarToInstance('frVariables', frVariables);
+  for I := 0 to Pages.Count - 1 do
+  begin
+    FPasScript.SetVarToInstance(Pages[I].Name, Pages[I]);
+    for J := 0 to Pages[I].Objects.Count - 1 do
+    begin
+      FPasScript.SetVarToInstance(TfrObject(Pages[I].Objects[J]).Name,
+        TfrObject(Pages[I].Objects[J]));
+    end;
+  end;
+  if Assigned(FOnExecute) then
+    FOnExecute(Sender);
+end;
+
+procedure TfrReport.PSCompile(Sender: TPSScript);
+var
+  I, J: Integer;
+begin
+  FPasScript.AddRegisteredVariable('Report', Self.ClassName);
+  FPasScript.AddRegisteredVariable('frVariables', frVariables.ClassName);
+  for I := 0 to Pages.Count - 1 do
+  begin
+    FPasScript.AddRegisteredVariable(Pages[I].Name, Pages[I].ClassName);
+    for J := 0 to Pages[I].Objects.Count - 1 do
+      FPasScript.AddRegisteredVariable(TfrObject(Pages[I].Objects[J]).Name,
+        TfrObject(Pages[I].Objects[J]).ClassName);
+  end;
+  if Assigned(FOnCompile) then
+    FOnCompile(Sender);
+end;
+
+procedure TfrReport.PSExecOnBand(ProcName: String; Band: TfrBand);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  Arg: TPSVariantClass;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  Arg.VI.FType := FPasScript.Exec.FindType2(btClass);
+  Arg.Data := Band;
+  Params.Add(@Arg);
+  if not FPasScript.Exec.RunProc(Params, Proc) then
+    DoExecError;
+  Params.Free;
+end;
+
+procedure TfrReport.PSExecOnEnterRec(ProcName: String; Memo: TStringList;
+  View: TfrView);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  ArgM, ArgV: TPSVariantClass;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  ArgV.VI.FType := FPasScript.Exec.FindType2(btClass);
+  ArgV.Data := View;
+  Params.Add(@ArgV);
+  ArgM.VI.FType := FPasScript.Exec.FindType2(btClass);
+  ArgM.Data := Memo;
+  Params.Add(@ArgM);
+  if not FPasScript.Exec.RunProc(Params, Proc) then
+    DoExecError;
+  Params.Free;
+end;
+
+procedure TfrReport.PSExecOnPrintColumn(ProcName: String; ColNo: Integer;
+  var Width: Integer);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  ArgC, ArgW: TPSVariantS32;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  ArgW.VI.FType := FPasScript.Exec.FindType2(btS32);
+  ArgW.Data := Width;
+  Params.Add(@ArgW);
+  ArgC.VI.FType := FPasScript.Exec.FindType2(btS32);
+  ArgC.Data := ColNo;
+  Params.Add(@ArgC);
+  if FPasScript.Exec.RunProc(Params, Proc) then
+    Width := ArgW.Data
+  else
+    DoExecError;
+  Params.Free;
+end;
+
+procedure TfrReport.PSExecOnMouseOverObj(ProcName: String; View: TfrView;
+  var ACursor: TCursor);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  ArgV: TPSVariantClass;
+  ArgC: TPSVariantS32;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  ArgC.VI.FType := FPasScript.Exec.FindType2(btS32);
+  ArgC.Data := ACursor;
+  Params.Add(@ArgC);
+  ArgV.VI.FType := FPasScript.Exec.FindType2(btClass);
+  ArgV.Data := View;
+  Params.Add(@ArgV);
+  if FPasScript.Exec.RunProc(Params, Proc) then
+    ACursor := ArgC.Data
+  else
+    DoExecError;
+  Params.Free;
+end;
+
+procedure TfrReport.PSExecOnView(ProcName: String; View: TfrView);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  Arg: TPSVariantClass;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  Arg.VI.FType := FPasScript.Exec.FindType2(btClass);
+  Arg.Data := View;
+  Params.Add(@Arg);
+  if not FPasScript.Exec.RunProc(Params, Proc) then
+    DoExecError;
+  Params.Free;
+end;
+
+procedure TfrReport.PSExecOnGetValue(ProcName: String; const ValName: String;
+  var AValue: Variant);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  ArgV: TPSVariantVariant;
+  ArgN: TPSVariantAString;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  ArgV.VI.FType := FPasScript.Exec.FindType2(btVariant);
+  ArgV.Data := AValue;
+  Params.Add(@ArgV);
+  ArgN.VI.FType := FPasScript.Exec.FindType2(btString);
+  ArgN.Data := ValName;
+  Params.Add(@ArgN);
+  if FPasScript.Exec.RunProc(Params, Proc) then
+    AValue := ArgV.Data
+  else
+    DoExecError;
+  Params.Free;
+end;
+
+procedure TfrReport.PSExecOnUserFunc(ProcName: String; AName: String; P1, P2,
+  P3: Variant; var AValue: Variant);
+var
+  Params: TPSList;
+  Proc: Cardinal;
+  ArgV: TPSVariantVariant;
+  ArgV1: TPSVariantVariant;
+  ArgV2: TPSVariantVariant;
+  ArgV3: TPSVariantVariant;
+  ArgN: TPSVariantAString;
+begin
+  PSExecute(FPasScript);
+  Proc := FPasScript.Exec.GetProc(ProcName);
+  Params := TPSList.Create;
+  ArgV.VI.FType := FPasScript.Exec.FindType2(btVariant);
+  ArgV.Data := AValue;
+  Params.Add(@ArgV);
+  ArgV3.VI.FType := FPasScript.Exec.FindType2(btVariant);
+  ArgV3.Data := P3;
+  Params.Add(@ArgV3);
+  ArgV2.VI.FType := FPasScript.Exec.FindType2(btVariant);
+  ArgV2.Data := P2;
+  Params.Add(@ArgV2);
+  ArgV1.VI.FType := FPasScript.Exec.FindType2(btVariant);
+  ArgV1.Data := P1;
+  Params.Add(@ArgV1);
+  ArgN.VI.FType := FPasScript.Exec.FindType2(btString);
+  ArgN.Data := AName;
+  Params.Add(@ArgN);
+  if FPasScript.Exec.RunProc(Params, Proc) then
+    AValue := ArgV.Data
+  else
+    DoExecError;
+  Params.Free;
+end;
+
 function TfrReport.DoObjectClick(AObj: TfrView): boolean;
 begin
   Result:=false;
@@ -11738,6 +12323,15 @@ procedure TfrReport.DoUserFunction(const AName: String; p1, p2, p3: Variant;
 begin
   if Assigned(FOnFunction) then
     FOnFunction(AName, p1, p2, p3, Val);
+end;
+
+procedure TfrReport.DoExecError;
+begin
+  if Assigned(FOnExecError) then
+    FOnExecError(Self);
+  if FShowRuntimeErrors then
+    frRuntimeErrorDlg(FPasScript);
+  Terminated := True;
 end;
 
 procedure TfrReport.Loaded;
@@ -12969,6 +13563,7 @@ begin
     Memo.Assign(TfrObject(Source).Memo);
     Script.Assign(TfrObject(Source).Script);
     Visible:=TfrObject(Source).Visible;
+    PSOnEnter:=TfrObject(Source).PSOnEnter;
   end;
 end;
 
@@ -13007,6 +13602,7 @@ begin
     CreateUniqueName;
 
   Visible:=XML.GetValue(Path+'Visible/Value'{%H-}, true);
+  PSOnEnter:=XML.GetValue(Path+'PSOnEnter/Value', '');
 end;
 
 procedure TfrObject.SaveToXML(XML: TLrXMLConfig; const Path: String);
@@ -13015,6 +13611,7 @@ begin
   XML.SetValue(Path+'ClassName/Value', self.Classname);
   
   XML.SetValue(Path+'Visible/Value', Visible);
+  XML.SetValue(Path+'PSOnEnter/Value', PSOnEnter);
 end;
 
 { TfrRect }
@@ -13100,11 +13697,21 @@ begin
   Result:=FCaption;
 end;
 
+function TfrPageDialog.GetModalResult: Integer;
+begin
+  Result := FForm.ModalResult;
+end;
+
 procedure TfrPageDialog.SetCaption(AValue: string);
 begin
   FCaption:=AValue;
   if Assigned(FForm) then
     FForm.Caption:=AValue;
+end;
+
+procedure TfrPageDialog.SetModalResult(AValue: Integer);
+begin
+  FForm.ModalResult := AValue;
 end;
 
 procedure TfrPageDialog.UpdateControlPosition;
@@ -13167,7 +13774,7 @@ begin
   if fHasVisibleControls then
   begin
     UpdateControlPosition;
-    if FForm.ShowModal <> mrOk then
+    if FShowDialog and (FForm.ShowModal <> mrOk) then
       CurReport.Terminated:=true;
   end;
 end;
@@ -13235,6 +13842,7 @@ begin
   Width :=400;
   Height:=250;
   PageType:=ptDialog;
+  FShowDialog := True;
 end;
 
 destructor TfrPageDialog.Destroy;
@@ -13251,12 +13859,22 @@ procedure TfrPageDialog.LoadFromXML(XML: TLrXMLConfig; const Path: String);
 begin
   inherited LoadFromXML(XML, Path);
   Caption:=XML.GetValue(Path+'Caption/Value', '');
+  ShowDialog := XML.GetValue(Path+'ShowDialog/Value', False);
 end;
 
 procedure TfrPageDialog.SavetoXML(XML: TLrXMLConfig; const Path: String);
 begin
   inherited SavetoXML(XML, Path);
   XML.SetValue(Path+'Caption/Value', Caption);
+  XML.SetValue(Path+'ShowDialog/Value', ShowDialog);
+end;
+
+function TfrPageDialog.ShowModal: Integer;
+begin
+  if Assigned(FForm) then
+    Result := FForm.ShowModal
+  else
+    Result := mrNone;
 end;
 
 { TLrXMLConfig }
