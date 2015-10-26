@@ -5082,6 +5082,9 @@ begin
   Rep.OnUserFunction:=SaveR.OnUserFunction;
 
   Rep.AfterCompile := @PSCompile;
+  for I := 0 to SaveR.PSScript.Plugins.Count - 1 do
+    with TPSPluginItem(Rep.PSScript.Plugins.Add) do
+      Plugin := TPSPluginItem(SaveR.PSScript.Plugins.Items[I]).Plugin;
 
   if AMode = DP_DEBUG then
   begin
