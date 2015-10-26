@@ -1684,7 +1684,7 @@ begin
   //with RegClassS(CL,'TlrVisualControl', 'TlrDateEdit') do
   with CL.AddClassN(CL.FindClass('TlrVisualControl'),'TlrDateEdit') do
   begin
-    RegisterProperty('Date', 'TDateTime', iptrw);
+    RegisterProperty('Date', 'Double', iptrw);
   end;
 end;
 
