@@ -12071,16 +12071,29 @@ end;
 procedure TfrReport.PSCompile(Sender: TPSScript);
 var
   I, J: Integer;
+  VarList: TStringList;
 begin
+  VarList := TStringList.Create;
   FPasScript.AddRegisteredVariable('Report', Self.ClassName);
   FPasScript.AddRegisteredVariable('frVariables', frVariables.ClassName);
+  VarList.Add(UpperCase('Report'));
+  VarList.Add(UpperCase('frVariables'));
   for I := 0 to Pages.Count - 1 do
   begin
-    FPasScript.AddRegisteredVariable(Pages[I].Name, Pages[I].ClassName);
+    if (Pages[I].Name <> '') and (VarList.IndexOf(UpperCase(Pages[I].Name)) = -1) then
+    begin
+      FPasScript.AddRegisteredVariable(Pages[I].Name, Pages[I].ClassName);
+      VarList.Add(UpperCase(Pages[I].Name));
+    end;
     for J := 0 to Pages[I].Objects.Count - 1 do
-      FPasScript.AddRegisteredVariable(TfrObject(Pages[I].Objects[J]).Name,
-        TfrObject(Pages[I].Objects[J]).ClassName);
+      if (TfrObject(Pages[I].Objects[J]).Name <> '') and (VarList.IndexOf(UpperCase(TfrObject(Pages[I].Objects[J]).Name)) = -1) then
+      begin
+        FPasScript.AddRegisteredVariable(TfrObject(Pages[I].Objects[J]).Name,
+          TfrObject(Pages[I].Objects[J]).ClassName);
+        VarList.Add(UpperCase(TfrObject(Pages[I].Objects[J]).Name));
+      end;
   end;
+  VarList.Free;
   if Assigned(FOnCompile) then
     FOnCompile(Sender);
 end;
