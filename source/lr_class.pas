@@ -13872,7 +13872,7 @@ procedure TfrPageDialog.LoadFromXML(XML: TLrXMLConfig; const Path: String);
 begin
   inherited LoadFromXML(XML, Path);
   Caption:=XML.GetValue(Path+'Caption/Value', '');
-  ShowDialog := XML.GetValue(Path+'ShowDialog/Value', False);
+  ShowDialog := XML.GetValue(Path+'ShowDialog/Value', True);
 end;
 
 procedure TfrPageDialog.SavetoXML(XML: TLrXMLConfig; const Path: String);
