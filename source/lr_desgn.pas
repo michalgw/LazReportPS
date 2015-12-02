@@ -5080,6 +5080,12 @@ begin
   Rep.OnPrintColumn:=SaveR.OnPrintColumn;
   Rep.OnProgress:=SaveR.OnProgress;
   Rep.OnUserFunction:=SaveR.OnUserFunction;
+  Rep.OnCompile := SaveR.OnCompile;
+  Rep.OnExecute := SaveR.OnExecute;
+  Rep.OnCompImport := SaveR.OnCompImport;
+  Rep.OnExecImport := SaveR.OnExecImport;
+  Rep.OnExecError := SaveR.OnExecError;
+  Rep.AfterCompile := SaveR.AfterCompile;
 
   Rep.AfterCompile := @PSCompile;
   for I := 0 to SaveR.PSScript.Plugins.Count - 1 do
